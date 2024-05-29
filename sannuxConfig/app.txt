@@ -1,0 +1,36 @@
+1. ranger - cli file manager
+2. thunar - gui file manger
+3. nitrogen - wallpaper
+4. lightdm, sddm - display manager
+
+
+####
+# for sddm theme
+
+- sudo pacman -S qt5-base qt5-graphicaleffects
+- sudo pacman -S qt6-base qt6-declarative qt6-svg
+- simple-theme for jakoolit``
+- sudo pacman -S xf86-video-intel
+- sudo pacman -S nvidia
+- sudo pacman -S xf86-video-amdgpu
+- sudo pacman -S mesa
+
+#####
+
+#for brightness
+- xbacklight -inc 10 ;;;; use logic in sxhdk
+
+#########3
+
+for audio 
+
+- sudo pacman -S alsa-utils alsa-plugins pulseaudio pulseaudio-alsa
+- sudo pacman -S sof-firmware
+- aplay -l
+
+
+##########
+
+
+
+

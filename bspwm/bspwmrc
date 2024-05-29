@@ -1,0 +1,59 @@
+#! /bin/sh
+
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+bspc monitor -d    󰈦  󰕼    
+
+bspc config border_width         2
+bspc config window_gap           5
+
+# theming
+bspc config normal_border_color "#003333"
+bspc config focused_border_color "#0088aa"
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+# compositor
+picom &
+#polybar &
+
+# spawn applications in specific workspaces
+bspc rule -a Gimp-2.10 desktop='^8' follow=on focus=on
+bspc rule -a Spotify desktop='^5' follow=on focus=on
+bspc rule -a Evince desktop='^4' follow=on focus=on
+bspc rule -a libreoffice-impress desktop='^4' follow=on focus=on
+bspc rule -a alacritty desktop='^1' follow=on focus=on
+bspc rule -a Chromium desktop='^3' follow=on focus=onbspc rule -a discord desktop='^3' follow=on focus=on
+bspc rule -a Emacs desktop='^1' state=tiled follow=on focus=on
+bspc rule -a transmission-gtk desktop='^7' follow=on focus=on
+bspc rule -a io.github.celluloid_player.Celluloid desktop='^6' follow=on focus=on
+bspc rule -a vlc desktop='^6' follow=on focus=on
+bspc rule -a Popcorn-Time desktop='^6' follow=on focus=on
+bspc rule -a obs desktop='^9' follow=on focus=on
+
+# set default terminal to alacritty
+export TERMINAL="alacritty"
+
+# # startups
+# eww daemon
+# eww open bar
+
+nm-applet &
+parallel -j0 exec ::: ~/.config/scripts/*.sh &
+numlockx &
+discord &
+env LD_PRELOAD=/usr/lib/spotify-adblock.so spotify --uri=%U &
+nitrogen --restore &
+
+
+# set master and stack layout for all desktops
+for desktop in $(bspc query -D --names); do
+	bsp-layout set tall $desktop -- --master-size 0.6
+done
+
+
+# when window load 
+xset r rate 250 50
+
