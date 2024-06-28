@@ -5,23 +5,52 @@
 #[╰─cmd────❯](bold green) 
 # ~/.config/starship.toml
 
-right_format = """$cmd_duration|$time"""
+right_format = """"""
 
-[time]
-disabled = false
-format = '[$time]($style) '
-time_format = '%I:%M %p'
-#utc_time_offset = '+5:45'
+# [time]
+# disabled = false
+# format = '[$time]($style) '
+# time_format = '%I:%M %p'
+# #utc_time_offset = '+5:45'
 
-[battery]
-full_symbol = '🔋 '
-charging_symbol = '⚡️ '
-discharging_symbol = '💀 '
+# [battery]
+# full_symbol = '🔋 '
+# charging_symbol = '⚡️ '
+# discharging_symbol = '💀 '
 
-[[battery.display]] # 'bold yellow' style and 💦 symbol when capacity is between 10% and 30%
-threshold = 30
-style = 'bold yellow'
-discharging_symbol = ''
+
+# # Define the style for different ranges
+# [[battery.display]]
+# threshold = 30
+# style = "bold green"
+# discharging_symbol = "  "
+#
+# [[battery.display]]
+# threshold = 50
+# style = "bold red"
+# discharging_symbol = "  "
+#
+# [[battery.display]]
+# threshold = 75
+# style = "bold green"
+# discharging_symbol = "  "
+#
+# [[battery.display]]
+# threshold = 20
+# style = "bold yellow"
+# discharging_symbol = "  " 
+#
+# [[battery.display]]
+# threshold = 10
+# style = "bold red"
+# discharging_symbol = "🪫 "
+#
+# [[battery.display]]
+# threshold = 100
+# style = "bold green"
+# discharging_symbol = "🔋"
+#
+#
 
 [username]
 style_user = "green bold"
@@ -32,13 +61,13 @@ show_always = true
 
 [hostname]
 ssh_only = false
-format = "| "
+format = "@ "
 trim_at = "."
 disabled = false
 
 # Replace the "❯" symbol in the prompt with "➜"
 [character]                            # The name of the module we are configuring is "character"
-success_symbol = "[﬌](bold green)"     # The "success_symbol" segment is being set to "➜" with the color "bold green"
+success_symbol = "[--->](bold blue)"     # The "success_symbol" segment is being set to "➜" with the color "bold green"
 error_symbol = "[✗](bold red)"
 #  
 # configure directory
@@ -52,7 +81,7 @@ style = "bold italic blue"
 min_time = 4
 show_milliseconds = false
 disabled = false
-style = "bold italic red"
+style = "italic green"
 
 [aws]
 symbol = "  "

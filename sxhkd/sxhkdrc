@@ -38,7 +38,7 @@ alt + shift + 0
 
 # Screenshot
 Print
-     flameshot gui --clipboard --path "Pictures/"
+     flameshot gui --clipboard
 
 # program launcher
 alt + r
@@ -57,11 +57,11 @@ XF86AudioMute
 # Brightness Control
 # Increase brightness
 XF86MonBrightnessUp
-    xbacklight -inc 5
+    xbacklight -inc 2
 
 # Decrease brightness with minimum limit of 5%
 XF86MonBrightnessDown
-    sh -c 'current=$(xbacklight -get); [ "$(echo "$current > 5" | bc)" -eq 1 ] && xbacklight -dec 5 || xbacklight -set 5'
+    xbacklight -dec 2
 
 
 
