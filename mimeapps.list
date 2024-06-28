@@ -1,6 +1,9 @@
 [Default Applications]
-text/plain=nvim.desktop
+text/plain=code.desktop
+x-scheme-handler/postman=Postman.desktop
+application/x-zerosize=code.desktop
 
 [Added Associations]
 text/plain=code.desktop;nvim.desktop;
 image/png=viewnior.desktop;
+application/x-zerosize=code.desktop;
