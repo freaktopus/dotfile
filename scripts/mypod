@@ -1,0 +1,31 @@
+#!/bin/bash
+
+DEVICE_NAME="freakpod"
+
+# Get the MAC address of the device
+DEVICE_MAC=$(bluetoothctl devices | grep "$DEVICE_NAME" | awk '{print $2}')
+
+if [ -z "$DEVICE_MAC" ]; then
+    echo "❌ Device '$DEVICE_NAME' not found. Is it paired?"
+    exit 1
+fi
+
+echo "🔍 Found $DEVICE_NAME at $DEVICE_MAC"
+
+# Try to connect using bluetoothctl and capture output
+OUTPUT=$(bluetoothctl <<EOF
+power on
+trust $DEVICE_MAC
+connect $DEVICE_MAC
+EOF
+)
+
+# Check if connection was successful
+if echo "$OUTPUT" | grep -q "Connection successful"; then
+    echo "✅ Connected to $DEVICE_NAME!"
+else
+    echo "❌ Failed to connect to $DEVICE_NAME."
+    echo "$OUTPUT"
+    exit 1
+fi
+
