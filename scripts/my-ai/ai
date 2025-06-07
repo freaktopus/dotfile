@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Note: Work only for i3
+
+
+# Configuration
+PROJECT_DIR="$HOME/my-ai/"
+TARGET_WORKSPACE=9
+WINDOW_CLASS="AIStudioBot"  # match with --class arg
+
+# Ensure project directory exists
+if [ ! -d "$PROJECT_DIR" ]; then
+  echo "Error: Directory '$PROJECT_DIR' does not exist."
+  exit 1
+fi
+
+# Get current i3 workspace
+CURRENT_WORKSPACE=$(i3-msg -t get_workspaces | jq -r '.[] | select(.focused==true).name')
+echo "Current workspace: $CURRENT_WORKSPACE"
+echo "Target workspace: $TARGET_WORKSPACE"
+
+# Run Script
+# Run chromedriver in the background
+# Find and kill any process using port 4444
+PID=$(lsof -ti tcp:4444)
+if [ -n "$PID" ]; then
+    echo "Killing process on port 4444 (PID: $PID)..."
+    kill -9 $PID
+else
+    echo "No process found on port 4444."
+fi
+chromedriver --port=4444 &
+
+cd "$PROJECT_DIR" || exit
+echo "Running Rust app..."
+cargo run & RUST_PID=$!
+# wait chrome to appear
+sleep 3
+
+# move chrome to TARGET_WORKSPACE
+echo "Moving Chrome window to workspace $TARGET_WORKSPACE..."
+i3-msg "[class=\"$WINDOW_CLASS\"] move container to workspace number $TARGET_WORKSPACE" 2>/dev/null
+
+echo "Browser should now be in workspace $TARGET_WORKSPACE"
+echo "You remain in workspace $CURRENT_WORKSPACE"
+
+# wait for the rust process to finish
+wait $RUST_PID
+
