@@ -1,0 +1,14 @@
+layout splits
+new_tab Ampixa Repo
+cd ~/ampixa
+launch zsh -ic 'nvim .; exec zsh'
+new_tab Terminal
+cd ~/ampixa
+launch zsh
+new_tab Learn Rust
+cd ~/learnrust
+launch zsh -ic 'nvim .; exec zsh'
+new_tab LR Terminal
+cd ~/learnrust
+launch zsh
+focus_tab 2

@@ -1,1 +1,0 @@
-return { "itchyny/lightline.vim" }

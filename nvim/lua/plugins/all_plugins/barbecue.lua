@@ -9,7 +9,6 @@ return {
         exclude_filetypes = {
             'NvimTree',
         },
-        theme = 'catpuccin-mocha',
     },
     config = function()
         require('barbecue').setup()

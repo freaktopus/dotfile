@@ -2,15 +2,6 @@ return {
   "mrcjkb/rustaceanvim",
   version = "^5", -- Recommended
   ft = { "rust" },
-  config = function()
-    -- Auto-format Rust files on save
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = "*.rs",
-      callback = function()
-        vim.lsp.buf.format({ async = false })
-      end,
-    })
-  end,
   opts = {
     server = {
       autostart = true,

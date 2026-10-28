@@ -1,0 +1,14 @@
+[user]
+	name = freaktopus
+	email = paharisanjay10@gmail.com
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+[core]
+	editor = nvim
+[init]
+	defaultBranch = main
+[safe]
+	directory = /home/sannux/.local/share/nvim/lazy/CopilotChat.nvim

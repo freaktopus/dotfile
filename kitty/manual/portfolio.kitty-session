@@ -1,0 +1,8 @@
+layout splits
+new_tab Portfolio Nvim
+cd ~/freaktopus.github.io
+launch zsh -ic 'nvim .; exec zsh'
+new_tab Port Terminal
+cd ~/freaktopus.github.io
+launch zsh
+focus_tab 0

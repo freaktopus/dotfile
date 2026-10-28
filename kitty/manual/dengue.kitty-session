@@ -1,0 +1,8 @@
+layout splits
+new_tab Dengue Nvim
+cd ~/dengue_final
+launch zsh -ic 'nvim .; exec zsh'
+new_tab Terminal
+cd ~/dengue_final
+launch zsh
+focus_tab 0

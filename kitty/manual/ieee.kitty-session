@@ -1,0 +1,14 @@
+layout splits
+new_tab IEEE site Nvim
+cd ~/webpage
+launch zsh -ic 'nvim .; exec zsh'
+new_tab terminal
+cd ~
+launch zsh
+new_tab Repo
+cd ~/sparkgen
+launch zsh -ic 'nvim .; exec zsh'
+new_tab Repo Terminal
+cd ~/sparkgen
+launch zsh
+focus_tab 2

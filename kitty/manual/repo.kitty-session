@@ -1,0 +1,8 @@
+layout splits
+new_tab Repo
+cd ~
+launch zsh
+new_tab Terminal
+cd ~
+launch zsh
+focus_tab 0

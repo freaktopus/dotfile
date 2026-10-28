@@ -11,12 +11,11 @@ return {
 			},
 
 			markdown = {
-				img_dir = { "static", "img" }, -- Use table for nested dir (New feature form PR #20)
+				img_dir = { "static", "img" }, -- Use table for nested dir
 				img_dir_txt = "/img",
-				img_handler = function(img) -- New feature from PR #22
-					local script = string.format('./image_compressor.sh "%s"', img.path)
-					os.execute(script)
-				end,
+				-- WARNING: removed unsafe os.execute handler that ran a shell script
+				-- from the current working directory. Do not execute arbitrary scripts
+				-- from project directories.
 			},
 		})
 	end,

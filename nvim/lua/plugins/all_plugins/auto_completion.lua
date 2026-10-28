@@ -8,6 +8,7 @@ return {
 		"hrsh7th/cmp-cmdline",
 		"L3MON4D3/LuaSnip",
 		"onsails/lspkind.nvim",
+		"zbirenbaum/copilot-cmp",
 	},
 	config = function()
 		-- gray
@@ -98,13 +99,11 @@ return {
 				end,
 			},
 			sources = {
-				{ name = "nvim_lsp" },
-				{ name = "copilot" },
-				{ name = "luasnip" },
-				{ name = "path" },
-				{ name = "emoji" },
-				{ name = "buffer" },
-				{ name = "nvim_lsp_signature_help" },
+				{ name = "copilot", group_index = 2 },
+				{ name = "nvim_lsp", group_index = 2 },
+				{ name = "luasnip", group_index = 2 },
+				{ name = "path", group_index = 2 },
+				{ name = "buffer", group_index = 2 },
 			},
 		})
 	end,
