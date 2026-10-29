@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Waybar module: tailscale state as JSON. "toggle" switches it on/off.
+if [[ $1 == toggle ]]; then
+  if [[ $(tailscale status --json 2>/dev/null | jq -r .BackendState) == Running ]]; then tailscale down; else tailscale up; fi
+  pkill -RTMIN+8 waybar; exit
+fi
+st=$(tailscale status --json 2>/dev/null)
+if [[ $(jq -r .BackendState <<<"$st" 2>/dev/null) != Running ]]; then
+  echo '{"text":"󰖂","class":"off","tooltip":"Tailscale: off (click to connect)"}'; exit
+fi
+jq -c '
+  (.Self.TailscaleIPs[0]) as $ip
+  | ([.Peer[] | select(.ExitNode) | .HostName] | first // "none") as $exit
+  | ([.Peer[] | "\(if .Online then "●" else "○" end) \(.HostName)  \(.TailscaleIPs[0])"] | sort | join("\n")) as $peers
+  | {text: "󰖂", class: (if $exit == "none" then "on" else "exit" end),
+     tooltip: "Tailscale: \($ip)\nExit node: \($exit)\n\n\($peers)"}' <<<"$st"

@@ -1,0 +1,345 @@
+// Waybar modules (layout groups at the bottom)
+{
+    "sway/workspaces": {
+        "format": "{icon}",
+        "disable-scroll-wraparound": true,
+        "cursor": true,
+        "format-icons": {
+            "1": "I",
+            "2": "II",
+            "3": "III",
+            "4": "IV",
+            "5": "V",
+            "6": "VI",
+            "7": "VII",
+            "8": "VIII",
+            "9": "IX",
+            "10": "X"
+        }
+    },
+    "sway/mode": {
+        "format": " {} "
+    },
+    "custom/i-window": {
+        "format": "",
+        "tooltip": false
+    },
+    "sway/window": {
+        "format": "{app_id}",
+        "max-length": 40,
+        "rewrite": {
+            "": "desktop"
+        },
+        "tooltip-format": "{title}",
+        "icon": false
+    },
+    "tray": {
+        "icon-size": 14,
+        "spacing": 8
+    },
+    "custom/i-clock": {
+        "format": "",
+        "tooltip": false
+    },
+    "clock": {
+        "interval": 1,
+        "format": "{:%I:%M %p}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode": "month",
+            "weeks-pos": "right",
+            "on-scroll": 1,
+            "format": {
+                "months": "<span color='#fff4d2'><b>{}</b></span>",
+                "weeks": "<span color='#83a598'><b>W{}</b></span>",
+                "weekdays": "<span color='#fabd2f'><b>{}</b></span>",
+                "days": "<span color='#a89984'>{}</span>",
+                "today": "<span color='#fe8019'><b><u>{}</u></b></span>"
+            }
+        },
+        "actions": {
+            "on-click-right": "mode",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
+    },
+    "custom/i-cpu": {
+        "format": "",
+        "tooltip": false,
+        "on-click": "kitty -o startup_session=none -e htop"
+    },
+    "cpu": {
+        "interval": 2,
+        "format": "{usage}%",
+        "states": {
+            "warning": 80,
+            "critical": 90
+        },
+        "on-click": "kitty -o startup_session=none -e htop"
+    },
+    "temperature": {
+        "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
+        "input-filename": "temp1_input",
+        "interval": 5,
+        "critical-threshold": 85,
+        "format": "{temperatureC}°C",
+        "tooltip-format": "CPU package {temperatureC}°C"
+    },
+    "custom/i-mem": {
+        "format": "",
+        "tooltip": false
+    },
+    "backlight#icon": {
+        "format": "{icon}",
+        "format-icons": [
+            "󰃛",
+            "󰃜",
+            "󰃝",
+            "󰃞",
+            "󰃟",
+            "󰃠"
+        ],
+        "tooltip": false
+    },
+    "backlight": {
+        "format": "{percent}%",
+        "scroll-step": 2,
+        "tooltip": false
+    },
+    "pulseaudio#icon": {
+        "format": "{icon}",
+        "format-muted": "󰝟",
+        "format-icons": {
+            "headphone": "󰋋",
+            "headset": "󰋎",
+            "default": [
+                "󰕿",
+                "󰖀",
+                "󰕾"
+            ]
+        },
+        "tooltip": false,
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-click-right": "pavucontrol"
+    },
+    "pulseaudio": {
+        "format": "{volume}%",
+        "format-muted": "muted",
+        "scroll-step": 2,
+        "tooltip-format": "{desc}",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-click-right": "pavucontrol"
+    },
+    "bluetooth": {
+        "format": "󰂯",
+        "format-off": "󰂲",
+        "format-disabled": "󰂲",
+        "format-no-controller": "",
+        "format-connected": "󰂱",
+        "format-connected-battery": "󰂱 {device_battery_percentage}%",
+        "tooltip-format": "Bluetooth on — {num_connections} connected",
+        "tooltip-format-off": "Bluetooth off",
+        "tooltip-format-connected": "{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}",
+        "tooltip-format-enumerate-connected-battery": "{device_alias}  {device_battery_percentage}%",
+        "on-click": "~/.local/bin/net-toggle bluetooth",
+        "on-click-right": "swaymsg -q '[app_id=blueman-manager] kill' 2>/dev/null || GTK_THEME=Adwaita:dark blueman-manager"
+    },
+    "network#icon": {
+        "interval": 5,
+        "tooltip": false,
+        "format-wifi": "{icon}",
+        "format-icons": [
+            "󰤯",
+            "󰤟",
+            "󰤢",
+            "󰤥",
+            "󰤨"
+        ],
+        "format-ethernet": "󰈀",
+        "format-linked": "󰤧",
+        "format-disconnected": "󰤭",
+        "format-disabled": "󰤮",
+        "on-click": "~/.local/bin/net-toggle wifi",
+        "on-click-right": "swaymsg -q '[app_id=nmtui] kill' 2>/dev/null || kitty -o startup_session=none -o confirm_os_window_close=0 -o tab_bar_style=hidden --class nmtui -e nmtui-connect"
+    },
+    "network": {
+        "interval": 5,
+        "format-wifi": "{essid}",
+        "format-ethernet": "{ifname}",
+        "format-disconnected": "Disconnected",
+        "format-disabled": "off",
+        "tooltip-format-wifi": "{essid}  {signalStrength}%\n{ipaddr}\n {bandwidthUpBytes}    {bandwidthDownBytes}",
+        "tooltip-format-ethernet": "{ifname}  {ipaddr}\n {bandwidthUpBytes}    {bandwidthDownBytes}",
+        "on-click": "~/.local/bin/net-toggle wifi",
+        "on-click-right": "swaymsg -q '[app_id=nmtui] kill' 2>/dev/null || kitty -o startup_session=none -o confirm_os_window_close=0 -o tab_bar_style=hidden --class nmtui -e nmtui-connect"
+    },
+    "custom/tailscale": {
+        "exec": "~/.local/bin/tailscale-status",
+        "return-type": "json",
+        "interval": 15,
+        "signal": 8,
+        "on-click": "~/.local/bin/tailscale-status toggle"
+    },
+    "custom/caffeine": {
+        "exec": "~/.local/bin/idle-toggle status",
+        "return-type": "json",
+        "interval": 30,
+        "signal": 9,
+        "on-click": "~/.local/bin/idle-toggle"
+    },
+    "battery#icon": {
+        "interval": 5,
+        "format": "{icon}",
+        "tooltip": false,
+        "format-icons": {
+            "charging": [
+                "<span color='#fb4934'>󰢜</span>",
+                "<span color='#f65c2f'>󰂆</span>",
+                "<span color='#f0712b'>󰂇</span>",
+                "<span color='#e98628'>󰂈</span>",
+                "<span color='#e09b25'>󰢝</span>",
+                "<span color='#d4ad22'>󰂉</span>",
+                "<span color='#bdb523'>󰢞</span>",
+                "<span color='#a8b924'>󰂊</span>",
+                "<span color='#96bc25'>󰂋</span>",
+                "<span color='#84c026'>󰂅</span>"
+            ],
+            "plugged": [
+                "<span color='#fb4934'>󰢜</span>",
+                "<span color='#f65c2f'>󰂆</span>",
+                "<span color='#f0712b'>󰂇</span>",
+                "<span color='#e98628'>󰂈</span>",
+                "<span color='#e09b25'>󰢝</span>",
+                "<span color='#d4ad22'>󰂉</span>",
+                "<span color='#bdb523'>󰢞</span>",
+                "<span color='#a8b924'>󰂊</span>",
+                "<span color='#96bc25'>󰂋</span>",
+                "<span color='#84c026'>󰂅</span>"
+            ],
+            "default": [
+                "<span color='#fb4934'>󰁺</span>",
+                "<span color='#f65c2f'>󰁻</span>",
+                "<span color='#f0712b'>󰁼</span>",
+                "<span color='#e98628'>󰁽</span>",
+                "<span color='#e09b25'>󰁾</span>",
+                "<span color='#d4ad22'>󰁿</span>",
+                "<span color='#bdb523'>󰂀</span>",
+                "<span color='#a8b924'>󰂁</span>",
+                "<span color='#96bc25'>󰂂</span>",
+                "<span color='#84c026'>󰁹</span>"
+            ]
+        }
+    },
+    "battery": {
+        "interval": 5,
+        "full-at": 99,
+        "format": "{capacity}%",
+        "format-time": "{H}:{M:02}",
+        "tooltip-format": "{timeTo}\n{power:.1f} W",
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format-critical": "BATTERY LOW {capacity}%"
+    },
+    "custom/memory": {
+        "exec": "~/.local/bin/mem-mib",
+        "return-type": "json",
+        "interval": 5,
+        "on-click": "kitty -o startup_session=none -e htop"
+    },
+    "temperature#icon": {
+        "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
+        "input-filename": "temp1_input",
+        "interval": 5,
+        "critical-threshold": 85,
+        "tooltip": false,
+        "format": "{icon}",
+        "format-critical": "<span color='#fb4934'></span>",
+        "format-icons": [
+            "<span color='#83a598'></span>",
+            "<span color='#8ec07c'></span>",
+            "<span color='#fabd2f'></span>",
+            "<span color='#fe8019'></span>",
+            "<span color='#fb4934'></span>"
+        ]
+    },
+    "group/pill-left": {
+        "orientation": "horizontal",
+        "modules": [
+            "sway/workspaces",
+            "sway/mode",
+            "custom/sep1",
+            "custom/i-window",
+            "sway/window"
+        ]
+    },
+    "group/pill-right": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/i-cpu",
+            "cpu",
+            "temperature#icon",
+            "temperature",
+            "custom/i-mem",
+            "custom/memory",
+            "custom/sep3",
+            "backlight#icon",
+            "backlight",
+            "pulseaudio#icon",
+            "pulseaudio",
+            "custom/sep4",
+            "network#icon",
+            "network",
+            "battery#icon",
+            "battery"
+        ]
+    },
+    "clock#date": {
+        "interval": 60,
+        "format": "{:%a %d %b %Y}",
+        "tooltip": false
+    },
+    "custom/sep1": {
+        "format": "│",
+        "tooltip": false
+    },
+    "custom/sep2": {
+        "format": "│",
+        "tooltip": false
+    },
+    "custom/sep3": {
+        "format": "│",
+        "tooltip": false
+    },
+    "custom/sep4": {
+        "format": "│",
+        "tooltip": false
+    },
+    "group/pill-status": {
+        "orientation": "horizontal",
+        "modules": [
+            "bluetooth",
+            "custom/tailscale",
+            "custom/caffeine",
+            "tray"
+        ]
+    },
+    "group/island": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/i-clock",
+            "clock",
+            "custom/sep2",
+            "clock#date"
+        ]
+    },
+    "custom/notify": {
+        "exec": "~/.local/bin/notify-bar",
+        "return-type": "json",
+        "escape": false,
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -C"
+    }
+}

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Left-click on the bar's Wi-Fi / Bluetooth icon: switch the radio on or off.
+case "$1" in
+  wifi)
+    if [[ $(nmcli radio wifi) == enabled ]]; then nmcli radio wifi off; notify-send -a Wi-Fi -t 1500 "Wi-Fi off"
+    else nmcli radio wifi on; notify-send -a Wi-Fi -t 1500 "Wi-Fi on"; fi ;;
+  bluetooth)
+    if bluetoothctl show | grep -q "Powered: yes"; then bluetoothctl power off >/dev/null; notify-send -a Bluetooth -t 1500 "Bluetooth off"
+    else rfkill unblock bluetooth; bluetoothctl power on >/dev/null; notify-send -a Bluetooth -t 1500 "Bluetooth on"; fi ;;
+esac

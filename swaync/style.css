@@ -1,0 +1,74 @@
+@define-color bg      rgba(40, 40, 40, 0.95);
+@define-color bg1     #3c3836;
+@define-color bg2     #504945;
+@define-color fg      #ebdbb2;
+@define-color accent  #009F9F;
+@define-color orange  #009F9F;
+
+* { font-family: 'Monaspace Neon', 'Symbols Nerd Font', monospace; font-size: 11px; }
+
+.notification-row { outline: none; }
+.notification-row:focus, .notification-row:hover { background: transparent; }
+
+.notification {
+  background: @bg; border: 2px solid #009F9F; border-radius: 0;
+  margin: 4px; padding: 0; box-shadow: none;
+}
+.notification.critical { border-color: #fb4934; }
+.notification-content { padding: 6px 8px; color: @fg; }
+.notification-default-action, .notification-action { border-radius: 0; background: transparent; }
+.notification-default-action:hover, .notification-action:hover { background: rgba(0, 159, 159,0.15); }
+.notification-action { border: 1px solid @bg2; margin: 4px; color: @fg; }
+.summary { color: @orange; font-weight: bold; font-size: 12px; }
+.time { color: #a89984; font-size: 10px; }
+.body { color: @fg; }
+.image { border-radius: 0; }
+.body-image { border-radius: 0; margin-top: 6px; }
+.close-button { background: @bg2; color: @fg; border-radius: 0; min-width: 16px; min-height: 16px; margin: 4px; }
+.close-button:hover { background: @accent; }
+
+/* Progress bar used by the volume/brightness OSD */
+progressbar trough { background: @bg2; border-radius: 0; min-height: 6px; }
+progressbar progress { background: @accent; border-radius: 0; min-height: 6px; }
+
+.control-center {
+  background: @bg; border: 2px solid @accent; border-radius: 0; color: @fg; padding: 6px;
+}
+.control-center-list { background: transparent; }
+.control-center-list-placeholder { opacity: 0.5; }
+
+.widget-title { margin: 8px; font-size: 16px; color: @orange; font-weight: bold; }
+.widget-title > button { background: @bg1; color: @fg; border-radius: 0; padding: 2px 10px; border: none; }
+.widget-title > button:hover { background: @accent; color: #282828; }
+
+.widget-dnd { margin: 8px; color: @fg; }
+.widget-dnd > switch { background: @bg1; border-radius: 0; }
+.widget-dnd > switch:checked { background: @accent; }
+.widget-dnd > switch slider { background: @fg; border-radius: 0; }
+
+.widget-buttons-grid { padding: 6px; margin: 6px; background: @bg1; border-radius: 0; }
+.widget-buttons-grid > flowbox > flowboxchild > button {
+  background: @bg2; color: @fg; border-radius: 0; min-width: 44px; min-height: 40px; font-size: 18px; border: none;
+}
+.widget-buttons-grid > flowbox > flowboxchild > button:hover { background: rgba(0, 159, 159,0.4); }
+.widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked { background: @accent; color: #282828; }
+
+.widget-mpris { margin: 6px; }
+.widget-mpris-player { background: @bg1; border-radius: 0; padding: 8px; }
+.widget-mpris-title { font-weight: bold; color: @orange; }
+
+.widget-volume, .widget-backlight { background: @bg1; border-radius: 0; margin: 4px 6px; padding: 4px 10px; color: @fg; }
+.widget-volume trough, .widget-backlight trough { background: @bg2; border-radius: 0; min-height: 6px; }
+.widget-volume highlight, .widget-backlight highlight { background: @accent; border-radius: 0; }
+
+/* Only the card is visible: no background/box around the popup area */
+.floating-notifications, .floating-notifications.background,
+.notification-row, .notification-row:focus, .notification-row:hover,
+.notification-background, .notification-group, .notification-group:focus {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  outline: none;
+}
+.notification-row .notification-background { padding: 4px 6px; }
+.notification { box-shadow: none; }

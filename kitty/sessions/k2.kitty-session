@@ -1,0 +1,11 @@
+layout splits
+new_tab Nvim
+cd ~
+launch zsh
+new_tab Terminal
+cd ~
+launch zsh
+new_tab Terminal 2
+cd ~
+launch zsh
+focus_tab 0

@@ -1,0 +1,253 @@
+# ~/.config/sway/config  —  Gruvbox Dark, Alt as mod, vim keys
+# Reload: Alt+Shift+c      Docs: man 5 sway
+
+### ── Variables ────────────────────────────────────────────────
+set $mod Mod1
+set $left h
+set $down j
+set $up k
+set $right l
+set $term kitty
+set $menu wofi --show drun
+set $scripts ~/.local/bin
+
+# Gruvbox palette
+set $bg       #282828
+set $bg1      #3c3836
+set $bg2      #504945
+set $fg       #ebdbb2
+set $gray     #928374
+set $accent   #009F9F
+set $yellow   #fabd2f
+set $red      #fb4934
+set $aqua     #689d6a
+set $unfocus  #737373
+
+### ── Look & feel ──────────────────────────────────────────────
+font pango:Monaspace Neon, Symbols Nerd Font 10
+
+default_border pixel 2
+default_floating_border pixel 2
+titlebar_padding 6 2
+hide_edge_borders none
+gaps inner 6
+gaps outer 0
+# the bar already floats with its own margin, so only a small gap under it
+gaps top 2
+smart_gaps off
+
+#                       border   bg       text  indicator  child_border
+client.focused          $accent  $accent  #000000 $accent   $accent
+client.focused_inactive $unfocus $bg1     $fg   $unfocus   $unfocus
+client.unfocused        $unfocus $bg     $gray $unfocus   $unfocus
+client.urgent           $red     $red     $bg   $red       $red
+
+# Wallpaper: managed by waypaper (pick one with `waypaper`); restored at login.
+# Sway itself sets no background, so reloads never override your wallpaper.
+exec waypaper --restore
+
+# GTK theme / cursor / fonts for GTK apps
+seat seat0 xcursor_theme Adwaita 24
+exec_always {
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+    gsettings set org.gnome.desktop.interface font-name 'Monaspace Neon 9'
+    gsettings set org.gnome.desktop.interface monospace-font-name 'Monaspace Neon 9'
+}
+
+### ── Outputs ──────────────────────────────────────────────────
+# swaymsg -t get_outputs   to list names
+workspace 1 output eDP-1
+workspace 2 output eDP-1
+workspace 3 output HDMI-A-1 eDP-1
+workspace 4 output HDMI-A-1 eDP-1
+workspace 5 output eDP-1
+workspace 6 output eDP-1
+workspace 7 output eDP-1
+workspace 8 output eDP-1
+workspace 9 output eDP-1
+workspace 10 output eDP-1
+
+# Close the lid with an external screen = use only the external one
+bindswitch --reload --locked lid:on  output eDP-1 disable
+bindswitch --reload --locked lid:off output eDP-1 enable
+
+### ── Input ────────────────────────────────────────────────────
+input type:keyboard {
+    xkb_layout us
+    xkb_options caps:escape
+    repeat_delay 250
+    repeat_rate 50
+}
+
+input type:touchpad {
+    tap enabled
+    natural_scroll enabled
+    dwt enabled
+    middle_emulation enabled
+    drag enabled
+    # Lift the finger = drag/selection ends (no extra tap to "finish")
+    drag_lock disabled
+    scroll_factor 0.6
+}
+
+focus_follows_mouse yes
+mouse_warping container
+
+### ── Autostart ────────────────────────────────────────────────
+exec_always $scripts/waybar-launch
+exec swaync
+exec autotiling-rs || autotiling
+exec ~/.local/bin/nightlight init                      # warm screen after sunset; Alt+Shift+N cycles
+exec sh -c 'command -v cliphist && wl-paste --watch cliphist store'   # clipboard history (Alt+C)
+# Wi-Fi and Bluetooth: waybar icons open the official tools (nmtui, Blueman).
+# blueman-applet runs in the background only as the pairing agent (PIN/confirm
+# dialogs); its tray icon is off via: gsettings plugin-list ['!StatusNotifierItem']
+exec env GTK_THEME=Adwaita:dark blueman-applet
+# close those popups when another window gets focus
+exec ~/.local/bin/popup-autoclose
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway SWAYSOCK
+
+# Idle: lock at 5 min, screen off at 10 min, lock before sleep
+exec swayidle -w \
+    timeout 300  '$scripts/lock' \
+    timeout 600  'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+    before-sleep '$scripts/lock'
+
+### ── Window rules ─────────────────────────────────────────────
+# No title bars on any window (like i3: border pixel 2)
+for_window [all] border pixel 2
+for_window [app_id="pavucontrol"]              floating enable, resize set 800 500
+for_window [app_id="blueman-manager"]          floating enable, resize set 680 460, move position center
+for_window [app_id="nm-connection-editor"]     floating enable
+for_window [app_id="com.gabm.satty"]           floating enable, fullscreen enable
+for_window [app_id="org.gnome.Calculator"]     floating enable
+# Wi-Fi / Bluetooth settings popups: centered (they close on a click outside)
+for_window [app_id="nmtui"]                  floating enable, resize set 640 480, move position center
+for_window [window_role="pop-up"]              floating enable
+for_window [window_role="dialog"]              floating enable
+for_window [title="Picture-in-Picture"]        floating enable, sticky enable
+for_window [app_id="dropdown"]                 floating enable, resize set 70ppt 60ppt, move position center, move scratchpad, border pixel 2
+# Fullscreen video stops the screen from locking
+for_window [class=".*"] inhibit_idle fullscreen
+for_window [app_id=".*"] inhibit_idle fullscreen
+
+### ── Keybindings ──────────────────────────────────────────────
+floating_modifier $mod normal
+
+bindsym $mod+Return       exec $term
+bindsym $mod+d            exec $menu
+bindsym $mod+Shift+q      kill
+bindsym $mod+Shift+b      exec thunar
+bindsym $mod+Shift+f      exec firefox-developer-edition
+bindsym $mod+Shift+c      reload
+bindsym $mod+Shift+e      exec $scripts/powermenu
+bindsym $mod+Shift+i      exec $scripts/lock
+bindsym $mod+n            exec swaync-client -t -sw
+bindsym $mod+Shift+n      exec ~/.local/bin/nightlight          # night light: auto -> on -> off
+bindsym $mod+Shift+a      exec ~/.local/bin/window-switcher     # jump to any open window
+bindsym $mod+c            exec ~/.local/bin/clipboard-history   # clipboard history
+
+# Dropdown terminal (Alt+`)
+exec kitty -o startup_session=none --class dropdown
+bindsym $mod+grave        exec swaymsg '[app_id="dropdown"] scratchpad show' || kitty -o startup_session=none --class dropdown
+
+# Focus / move
+bindsym $mod+$left  focus left
+bindsym $mod+$down  focus down
+bindsym $mod+$up    focus up
+bindsym $mod+$right focus right
+bindsym $mod+Left   focus left
+bindsym $mod+Down   focus down
+bindsym $mod+Up     focus up
+bindsym $mod+Right  focus right
+bindsym $mod+Shift+$left  move left
+bindsym $mod+Shift+$down  move down
+bindsym $mod+Shift+$up    move up
+bindsym $mod+Shift+$right move right
+bindsym $mod+Shift+Left   move left
+bindsym $mod+Shift+Down   move down
+bindsym $mod+Shift+Up     move up
+bindsym $mod+Shift+Right  move right
+bindsym $mod+Tab          workspace back_and_forth
+
+# Workspaces
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+# Layout
+bindsym $mod+b splith
+bindsym $mod+v splitv
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+f fullscreen
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+bindsym $mod+Shift+s sticky toggle
+bindsym $mod+g gaps inner current toggle 6
+
+# Scratchpad
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# Resize
+mode "resize" {
+    bindsym $left  resize shrink width 20px
+    bindsym $down  resize grow height 20px
+    bindsym $up    resize shrink height 20px
+    bindsym $right resize grow width 20px
+    bindsym Left   resize shrink width 20px
+    bindsym Down   resize grow height 20px
+    bindsym Up     resize shrink height 20px
+    bindsym Right  resize grow width 20px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# Screenshots → ~/Pictures/Screenshots + clipboard (image for browser/nvim, path for terminal)
+bindsym Print            exec $scripts/screenshot region
+bindsym Shift+Print      exec $scripts/screenshot edit
+bindsym Ctrl+Print       exec $scripts/screenshot full
+bindsym $mod+Print       exec $scripts/screenshot window
+bindsym $mod+Shift+p     exec $scripts/screenshot region
+
+# Media keys (with OSD notifications)
+bindsym --locked XF86AudioRaiseVolume  exec $scripts/osd volume up
+bindsym --locked XF86AudioLowerVolume  exec $scripts/osd volume down
+bindsym --locked XF86AudioMute         exec $scripts/osd volume mute
+bindsym --locked XF86AudioMicMute      exec $scripts/osd mic mute
+bindsym --locked XF86MonBrightnessUp   exec $scripts/osd brightness up
+bindsym --locked XF86MonBrightnessDown exec $scripts/osd brightness down
+bindsym --locked XF86AudioPlay  exec playerctl play-pause
+bindsym --locked XF86AudioPause exec playerctl play-pause
+bindsym --locked XF86AudioNext  exec playerctl next
+bindsym --locked XF86AudioPrev  exec playerctl previous
+
+include /etc/sway/config.d/*
+
+# Rounded corners, shadows, blur — needs SwayFX (active)
+include ~/.config/sway/swayfx.conf

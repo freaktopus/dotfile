@@ -1,0 +1,22 @@
+// Waybar: iPhone Dynamic Island style (pills on a transparent bar)
+{
+    "layer": "top",
+    "position": "top",
+    "height": 24,
+    "margin": "3 6 0 6",
+    "spacing": 0,
+    "modules-left": [
+        "group/pill-left",
+        "group/pill-status",
+        "custom/notify"
+    ],
+    "modules-center": [
+        "group/island"
+    ],
+    "modules-right": [
+        "group/pill-right"
+    ],
+    "include": [
+        "~/.config/waybar/modules.jsonc"
+    ]
+}

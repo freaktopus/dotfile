@@ -1,0 +1,140 @@
+/* Waybar: Dynamic-Island pills, Tokyo-Night-style palette
+   (deep black glass, muted neon accents: coder / gaming / clean). */
+
+@define-color glass      rgba(0, 0, 0, 0.94);
+@define-color edge       #232323;
+@define-color fg         #e6e6e6;   /* clean white text */
+@define-color dim        #7a7f8c;
+@define-color sep        #3a3a3a;
+@define-color blue       #7aa2f7;
+@define-color cyan       #7dcfff;
+@define-color purple     #bb9af7;
+@define-color kitty      #fe8019;   /* kitty's accent orange */
+@define-color magenta    #ff79c6;
+@define-color amber      #e0af68;
+@define-color ok         #9ece6a;   /* status: connected */
+@define-color bad        #f7768e;   /* status: disconnected / off / critical */
+@define-color white      #ffffff;
+
+* {
+    font-family: 'Monaspace Neon', 'Symbols Nerd Font', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    text-shadow: none;
+}
+
+window#waybar { background: transparent; color: @fg; }
+
+/* ── Pills ───────────────────────────────────────────── */
+#pill-left, #pill-status, #pill-right, #island {
+    background: @glass;
+    border: 1px solid @edge;
+    border-radius: 0;
+    padding: 0 12px;
+}
+#pill-status { margin-left: 8px; padding: 0 6px; }
+#island { padding: 0 10px; border-color: #2c2c2c; }
+
+/* separators */
+#custom-sep1, #custom-sep2, #custom-sep3, #custom-sep4 {
+    color: @sep;
+    font-size: 13px;
+    padding: 0 9px;
+}
+
+/* icons: clear gap from the previous module, close to their own text */
+#custom-i-window, #custom-i-cpu, #temperature.icon, #custom-i-mem, #backlight.icon,
+#pulseaudio.icon, #network.icon, #battery.icon {
+    font-size: 14px;
+    padding: 0 5px 0 12px;
+}
+#custom-i-cpu, #custom-i-window, #backlight.icon, #network.icon { padding-left: 0; }
+/* text next to an icon */
+#window, #cpu, #temperature, #custom-memory, #backlight, #pulseaudio, #network, #battery {
+    color: @fg;
+    padding-right: 2px;
+}
+
+/* ── Workspaces ──────────────────────────────────────── */
+#workspaces button {
+    color: @dim;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 0 5px;
+    min-width: 0;
+}
+#workspaces button.focused { color: @kitty; }
+#workspaces button.urgent  { color: @bad; }
+#workspaces button:hover   { color: @kitty; background: transparent; box-shadow: none; }
+#mode { color: #0a0a0f; background: @amber; border-radius: 0; padding: 0 6px; margin: 3px 3px; }
+
+#custom-i-window { color: @ok; }       /* the prompt */
+#window          { color: @fg; }
+
+/* ── Status pill: Bluetooth · Tailscale · caffeine ───── */
+#bluetooth, #custom-tailscale, #custom-caffeine { font-size: 14px; padding: 0 7px; }
+#custom-tailscale { font-size: 15px; }
+#bluetooth                           { color: @blue; }   /* on, nothing connected */
+#bluetooth.connected                 { color: @ok; }
+#bluetooth.off, #bluetooth.disabled  { color: @bad; }
+#custom-tailscale.on                 { color: @ok; }
+#custom-tailscale.exit               { color: @amber; }  /* via exit node */
+#custom-tailscale.off                { color: @bad; }
+#custom-caffeine.on                  { color: @amber; }  /* staying awake */
+#custom-caffeine.off                 { color: @dim; }
+#tray { padding: 0 4px; }
+#tray > .needs-attention { -gtk-icon-effect: highlight; }
+
+/* ── Island: time │ date ─────────────────────────────── */
+#custom-i-clock { color: @cyan; font-size: 13px; padding-right: 5px; }
+#clock          { color: @white; font-size: 11px; font-weight: 700; }
+#clock.date     { color: @dim; font-size: 11px; font-weight: 500; }
+
+/* ── Right pill icon colors ──────────────────────────── */
+#custom-i-cpu    { color: @blue; }
+#custom-i-mem    { color: @purple; }
+#backlight.icon  { color: @amber; }
+#pulseaudio.icon { color: @cyan; }
+/* temperature and battery icons color themselves by level (modules.jsonc) */
+
+/* network: green connected, red off */
+#network.icon                        { color: @ok; }
+#network.icon.disabled, #network.icon.disconnected, #network.icon.linked,
+#network.disabled, #network.disconnected { color: @bad; }
+
+/* ── Warnings ────────────────────────────────────────── */
+#pulseaudio.icon.muted, #pulseaudio.muted { color: @dim; }
+#cpu.warning, #custom-memory.warning, #battery.warning { color: @amber; }
+#cpu.critical, #custom-memory.critical, #temperature.critical:not(.icon) { color: @bad; }
+#battery.critical:not(.charging) { color: @bad; animation: blink 1s steps(2) infinite alternate; }
+@keyframes blink { to { color: @fg; } }
+
+/* ── Tooltips / menus ────────────────────────────────── */
+tooltip { background: @glass; border: 1px solid @edge; border-radius: 0; }
+tooltip label { color: @fg; padding: 4px 10px; font-weight: 500; }
+menu { background: @glass; color: @fg; border: 1px solid @edge; border-radius: 0; }
+menu > *:hover { background: #1a1a1a; }
+
+/* ── Notification ticker (shown only while a notification is up) ─────── */
+#custom-notify {
+    background: @glass;
+    border: 1px solid @edge;
+    border-left: 2px solid #fe8019;
+    margin-left: 18px;
+    padding: 0 12px;
+    font-size: 11px;
+    font-weight: 500;
+    color: @fg;
+}
+#custom-notify.idle { background: transparent; border: none; padding: 0; margin: 0; }
+#custom-notify.active { animation: drop-in 0.28s cubic-bezier(.2, .9, .3, 1); }
+@keyframes drop-in {
+    from { margin-top: -26px; margin-bottom: 26px; opacity: 0; }
+    to   { margin-top: 0;     margin-bottom: 0;    opacity: 1; }
+}

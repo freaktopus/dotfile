@@ -2,28 +2,28 @@
 new_tab Nvim
 layout splits
 enabled_layouts splits,stack
-set_layout_state {"pairs": {"one": 7}, "opts": {"default_axis_is_horizontal": true}, "class": "Splits", "all_windows": {"active_group_idx": 0, "active_group_history": [7], "window_groups": [{"id": 7, "window_ids": [7]}]}}
-cd /home/sannux/ampixa
+set_layout_state {"pairs": {"one": 5}, "opts": {"split_axis": "horizontal", "equalize_on_window_close": "n", "proportional": "n"}, "class": "Splits", "all_windows": {"active_group_idx": 0, "active_group_history": [5], "window_groups": [{"id": 5, "window_ids": [5]}]}}
+cd /home/freaktopus
 
-launch 'kitty-unserialize-data={"id": 7}' /usr/bin/zsh
+launch 'kitty-unserialize-data={"id": 5}' /usr/bin/zsh
 focus
 
 new_tab Terminal
 layout splits
 enabled_layouts splits,stack
-set_layout_state {"pairs": {"one": 8}, "opts": {"default_axis_is_horizontal": true}, "class": "Splits", "all_windows": {"active_group_idx": 0, "active_group_history": [8], "window_groups": [{"id": 8, "window_ids": [10, 8]}]}}
-cd /home/sannux/ampixa
+set_layout_state {"pairs": {"one": 6}, "opts": {"split_axis": "horizontal", "equalize_on_window_close": "n", "proportional": "n"}, "class": "Splits", "all_windows": {"active_group_idx": 0, "active_group_history": [6], "window_groups": [{"id": 6, "window_ids": [6]}]}}
+cd /home/freaktopus
 
-launch 'kitty-unserialize-data={"id": 8}' /usr/bin/zsh
+launch 'kitty-unserialize-data={"id": 6}' /usr/bin/zsh
 focus
 
 new_tab Terminal 2
 layout splits
 enabled_layouts splits,stack
-set_layout_state {"pairs": {"one": 9}, "opts": {"default_axis_is_horizontal": true}, "class": "Splits", "all_windows": {"active_group_idx": 0, "active_group_history": [9], "window_groups": [{"id": 9, "window_ids": [9]}]}}
-cd /home/sannux
+set_layout_state {"pairs": {"one": 7}, "opts": {"split_axis": "horizontal", "equalize_on_window_close": "n", "proportional": "n"}, "class": "Splits", "all_windows": {"active_group_idx": 0, "active_group_history": [7], "window_groups": [{"id": 7, "window_ids": [7]}]}}
+cd /home/freaktopus
 
-launch 'kitty-unserialize-data={"id": 9}' /usr/bin/zsh
+launch 'kitty-unserialize-data={"id": 7}' /usr/bin/zsh
 focus
 
-focus_tab 5
+focus_tab 0

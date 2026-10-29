@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Alt+C: clipboard history in wofi (like greenclip on i3). Needs the `cliphist` package;
+# sway runs `wl-paste --watch cliphist store` at login to record what you copy.
+if ! command -v cliphist >/dev/null; then
+  notify-send -a Clipboard "Clipboard history" "Install it first: sudo pacman -S cliphist"; exit 1
+fi
+pick=$(cliphist list | wofi --dmenu --prompt "Clipboard" --columns 1 --lines 12 --width 700 --cache-file /dev/null) || exit 0
+cliphist decode <<<"$pick" | wl-copy

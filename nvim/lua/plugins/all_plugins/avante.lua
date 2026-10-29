@@ -1,14 +1,15 @@
 return {
 	"yetone/avante.nvim",
 	event = "VeryLazy",
+	version = false, -- always track main; release tags lag behind
 	build = "make",
 	dependencies = {
-		"nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+		"nvim-tree/nvim-web-devicons",
 		"stevearc/dressing.nvim",
 		"nvim-lua/plenary.nvim",
 		"MunifTanjim/nui.nvim",
-		"zbirenbaum/copilot.lua",
-		--- The below is optional, make sure to setup it properly if you have lazy=true
+		"zbirenbaum/copilot.lua", -- avante reuses copilot.lua's GitHub login
+		"HakonHarnes/img-clip.nvim", -- paste screenshots into the avante prompt
 		{
 			"MeanderingProgrammer/render-markdown.nvim",
 			opts = {
@@ -18,13 +19,19 @@ return {
 		},
 	},
 	opts = {
-		provider = "claude",
-		--provider = "copilot",
-		claude = {
-			endpoint = "https://api.anthropic.com",
-			model = "claude-3-5-sonnet-20240620",
-			temperature = 0,
-			max_tokens = 4096,
+		provider = "copilot",
+		providers = {
+			copilot = {
+				model = "claude-sonnet-4",
+				timeout = 30000,
+				extra_request_body = {
+					temperature = 0,
+					max_tokens = 8192,
+				},
+			},
+		},
+		behaviour = {
+			auto_suggestions = false, -- copilot.lua already does inline suggestions
 		},
 		mappings = {
 			submit = {
@@ -32,8 +39,8 @@ return {
 			},
 		},
 		windows = {
-			wrap = true, -- similar to vim.o.wrap
-			width = 40, -- default % based on available width
+			wrap = true,
+			width = 40,
 			sidebar_header = {
 				align = "right",
 				rounded = true,

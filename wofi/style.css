@@ -1,0 +1,38 @@
+/* Old i3 rofi launcher look: One Dark, square, dashed search underline, 2 columns */
+* {
+  font-family: 'Monaspace Neon', 'Symbols Nerd Font', monospace;
+  font-weight: 300;
+  font-size: 13px;
+}
+window {
+  background-color: #1E2127;
+  border: none;
+  border-radius: 0;
+}
+#outer-box { padding: 50px; }
+#input {
+  margin: 0 0 10px 0;
+  padding: 10px;
+  border: none;
+  border-bottom: 2px dashed #009F9F;
+  border-radius: 0;
+  background-color: #1E2127;
+  color: #FFFFFF;
+  box-shadow: none;
+  outline: none;
+}
+#input:focus { border-bottom: 2px dashed #009F9F; box-shadow: none; }
+#input image { color: #009F9F; }
+#inner-box, #scroll { background: transparent; border: none; }
+#entry {
+  padding: 5px;
+  border-radius: 0;
+  background: transparent;
+}
+#entry #text { color: #FFFFFF; margin-left: 10px; }
+#entry:selected {
+  background-color: #282B31;
+  outline: none;
+  border: none;
+}
+#entry:selected #text { color: #009F9F; }

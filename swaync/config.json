@@ -1,0 +1,105 @@
+{
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "positionX": "left",
+  "positionY": "top",
+  "layer": "overlay",
+  "control-center-layer": "top",
+  "cssPriority": "user",
+  "control-center-margin-top": 8,
+  "control-center-margin-right": 8,
+  "control-center-margin-bottom": 8,
+  "control-center-width": 400,
+  "notification-window-width": 810,
+  "notification-icon-size": 18,
+  "notification-body-image-height": 90,
+  "notification-body-image-width": 200,
+  "timeout": 5,
+  "timeout-low": 3,
+  "timeout-critical": 0,
+  "fit-to-screen": true,
+  "keyboard-shortcuts": true,
+  "image-visibility": "when-available",
+  "transition-time": 220,
+  "hide-on-clear": true,
+  "hide-on-action": true,
+  "widgets": [
+    "title",
+    "dnd",
+    "buttons-grid",
+    "mpris",
+    "volume",
+    "backlight",
+    "notifications"
+  ],
+  "widget-config": {
+    "title": {
+      "text": "Notifications",
+      "clear-all-button": true,
+      "button-text": "Clear"
+    },
+    "dnd": {
+      "text": "Do Not Disturb"
+    },
+    "mpris": {
+      "image-size": 72,
+      "blur": true
+    },
+    "volume": {
+      "label": "\uf028",
+      "show-per-app": false
+    },
+    "backlight": {
+      "label": "\udb80\udce0",
+      "device": "intel_backlight"
+    },
+    "buttons-grid": {
+      "actions": [
+        {
+          "label": "\udb82\udd28",
+          "type": "toggle",
+          "active": false,
+          "command": "sh -c '[ \"$SWAYNC_TOGGLE_STATE\" = true ] && nmcli radio wifi on || nmcli radio wifi off'",
+          "update-command": "sh -c '[ \"$(nmcli radio wifi)\" = enabled ] && echo true || echo false'"
+        },
+        {
+          "label": "\udb80\udcaf",
+          "type": "toggle",
+          "active": false,
+          "command": "sh -c '[ \"$SWAYNC_TOGGLE_STATE\" = true ] && bluetoothctl power on || bluetoothctl power off'",
+          "update-command": "sh -c 'bluetoothctl show | grep -q \"Powered: yes\" && echo true || echo false'"
+        },
+        {
+          "label": "\udb81\udd82",
+          "type": "toggle",
+          "active": false,
+          "command": "~/.local/bin/tailscale-status toggle",
+          "update-command": "sh -c '[ \"$(tailscale status --json 2>/dev/null | jq -r .BackendState)\" = Running ] && echo true || echo false'"
+        },
+        {
+          "label": "\udb80\udd76",
+          "command": "~/.local/bin/idle-toggle"
+        },
+        {
+          "label": "\uf030",
+          "command": "sh -c 'swaync-client -cp; ~/.local/bin/screenshot region'"
+        },
+        {
+          "label": "\uf023",
+          "command": "sh -c 'swaync-client -cp; ~/.local/bin/lock'"
+        },
+        {
+          "label": "\uf011",
+          "command": "sh -c 'swaync-client -cp; ~/.local/bin/powermenu'"
+        }
+      ]
+    }
+  },
+  "control-center-positionX": "right",
+  "control-center-positionY": "top",
+  "notification-visibility": {
+    "bar-ticker": {
+      "state": "muted",
+      "app-name": ".*"
+    }
+  }
+}

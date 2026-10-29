@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# screenshot region|full|window|edit
+# Saves to ~/Pictures/Screenshots and puts it on the clipboard as
+# image (browsers, nvim, chat) + file path (terminals) + file URI (file managers).
+set -o pipefail
+dir="$HOME/Pictures/Screenshots"; mkdir -p "$dir"
+file="$dir/$(date +%Y-%m-%d_%H-%M-%S).png"
+
+case "${1:-region}" in
+  region) geo=$(slurp -d -b '#28282880' -c '#009F9Fff' -w 2) || exit 0
+          grim -g "$geo" "$file" ;;
+  full)   grim "$file" ;;
+  window) geo=$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')
+          grim -g "$geo" "$file" ;;
+  edit)   geo=$(slurp -d -b '#28282880' -c '#009F9Fff' -w 2) || exit 0
+          grim -g "$geo" - | satty --filename - --output-filename "$file" \
+               --early-exit --initial-tool brush --actions-on-enter save-to-file ;;
+esac
+[[ -s "$file" ]] || exit 0
+
+setsid -f wl-copy-multi "$file" >/dev/null 2>&1
+
+# shown in the bar ticker; Shift+Print opens the editor directly
+notify-send -a Screenshot -i "$file" "Screenshot copied" "${file/#$HOME/\~}"

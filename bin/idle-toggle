@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Caffeine: toggle swayidle (no auto-lock while off). "status" prints waybar JSON.
+if [[ $1 == status ]]; then
+  if pgrep -x swayidle >/dev/null; then echo '{"text":"󰒲","class":"off","tooltip":"Auto-lock on (click: caffeine)"}'
+  else echo '{"text":"󰅶","class":"on","tooltip":"Caffeine: auto-lock off"}'; fi
+  exit
+fi
+if pgrep -x swayidle >/dev/null; then
+  pkill -x swayidle; notify-send -a caffeine -t 1500 "Caffeine on" "Screen will stay awake"
+else
+  swaymsg exec "swayidle -w timeout 300 ~/.local/bin/lock timeout 600 'swaymsg \"output * power off\"' resume 'swaymsg \"output * power on\"' before-sleep ~/.local/bin/lock"
+  notify-send -a caffeine -t 1500 "Caffeine off" "Auto-lock restored"
+fi
+pkill -RTMIN+9 waybar

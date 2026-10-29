@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Wi-Fi (nmtui) and Bluetooth (blueman-manager) settings popups:
+# - while one is open, focus-follows-mouse is off, so only a CLICK elsewhere moves focus
+# - when focus moves to another window, the popup closes
+# - focus-follows-mouse comes back once no popup is left
+# A popup gets 1 s of grace when it first gets focus (sway may briefly refocus the
+# window under the mouse right after a new window opens).
+opened=0
+popups() { swaymsg -t get_tree | jq '[.. | objects | select(.app_id == "nmtui" or .app_id == "blueman-manager")] | length'; }
+
+swaymsg -t subscribe -m '["window"]' |
+jq --unbuffered -r 'select(.change == "new" or .change == "focus" or .change == "close")
+                    | "\(.change) \(.container.app_id // .container.window_properties.class // "")"' |
+while read -r change app; do
+  now=$(date +%s%N)
+  case "$app" in
+    nmtui|blueman*)
+      if [[ $change == close ]]; then
+        (( $(popups) == 0 )) && swaymsg -q 'focus_follows_mouse yes'
+      else
+        [[ $change == new || $opened == 0 ]] && opened=$now   # start the grace period
+        swaymsg -q 'focus_follows_mouse no'
+      fi
+      continue ;;
+    "") continue ;;                                         # window not named yet
+  esac
+  [[ $change == focus ]] || continue
+  (( now - opened < 1000000000 )) && continue               # grace period
+  if (( $(popups) > 0 )); then
+    swaymsg -q '[app_id="nmtui"] kill; [app_id="blueman-manager"] kill' 2>/dev/null
+    opened=0
+    swaymsg -q 'focus_follows_mouse yes'
+  fi
+done

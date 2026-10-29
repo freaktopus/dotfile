@@ -1,0 +1,20 @@
+# Launcher modeled on the old i3 rofi drun (adi1090x type-4 / style-3, One Dark)
+show=drun
+width=800
+lines=12
+columns=2
+location=center
+prompt=  Search...
+filter_rate=100
+allow_markup=true
+allow_images=true
+image_size=24
+no_actions=true
+insensitive=true
+hide_scroll=true
+halign=fill
+content_halign=fill
+orientation=vertical
+gtk_dark=true
+key_down=Ctrl-j
+key_up=Ctrl-k

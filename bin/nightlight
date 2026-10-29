@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Night light (redshift-style), toggled with Alt+Shift+N:
+#   auto  -> warm after sunset, normal by day (started at login)
+#   on    -> warm red screen right now
+#   off   -> normal colors
+# Each press cycles auto -> on -> off -> auto.
+STATE="${XDG_RUNTIME_DIR:-/tmp}/nightlight.state"
+LAT=27.7 LON=85.3          # Kathmandu, for sunset times
+state=$(cat "$STATE" 2>/dev/null || echo auto)
+
+start() { pkill -x wlsunset; sleep 0.2; setsid -f wlsunset "$@" >/dev/null 2>&1; }
+
+case "${1:-cycle}" in
+  init) echo auto >"$STATE"; start -l $LAT -L $LON -t 4000 -T 6500; exit 0 ;;
+esac
+
+case "$state" in
+  auto) start -t 3400 -T 3401 -l $LAT -L $LON; next=on;  msg="On: warm screen now" ;;
+  on)   pkill -x wlsunset;                       next=off; msg="Off: normal colors" ;;
+  *)    start -l $LAT -L $LON -t 4000 -T 6500;   next=auto; msg="Auto: warm after sunset" ;;
+esac
+echo "$next" >"$STATE"
+notify-send -a nightlight -t 1500 "Night light" "$msg"

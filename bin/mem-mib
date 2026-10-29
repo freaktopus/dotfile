@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Waybar memory in MiB (like the old polybar %mb_used% / %mb_total%)
+awk '/^MemTotal:/{t=$2} /^MemAvailable:/{a=$2} /^SwapTotal:/{st=$2} /^SwapFree:/{sf=$2}
+END{u=(t-a)/1024; T=t/1024; p=u*100/T
+    cls=(p>=90)?"critical":(p>=80)?"warning":"normal"
+    printf "{\"text\":\"%d MiB / %d MiB\",\"class\":\"%s\",\"percentage\":%d,\"tooltip\":\"RAM %d%%\\nSwap %d MiB / %d MiB\"}\n", u, T, cls, p, p, (st-sf)/1024, st/1024}' /proc/meminfo

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# osd volume up|down|mute  |  osd mic mute  |  osd brightness up|down
+# Changes the level silently (waybar shows volume/brightness);
+# only mic mute pops a notification, since nothing else shows its state.
+case "$1 $2" in
+  "volume up")       wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+ ;;
+  "volume down")     wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- ;;
+  "volume mute")     wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle ;;
+  "mic mute")        wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle ;;
+  "brightness up")   brightnessctl -q set 5%+ ;;
+  "brightness down") brightnessctl -q set 5%- ;;
+esac
+if [[ $1 == mic ]]; then
+  if [[ $(wpctl get-volume @DEFAULT_AUDIO_SOURCE@) == *MUTED* ]]; then icon=microphone-sensitivity-muted; txt="Mic muted"
+  else icon=audio-input-microphone; txt="Mic on"; fi
+  notify-send -a osd -t 1500 -i "$icon" -h string:x-canonical-private-synchronous:osd "$txt"
+fi

@@ -34,3 +34,9 @@ map("n", "<leader>O", function()
   vim.ui.open(dir)
 end, { desc = "Open file directory in system file manager" })
 
+
+-- Mouse selection copies to the system clipboard as soon as the button is
+-- released (drag, double-click word, triple-click line); the selection stays visible.
+for _, lhs in ipairs { "<LeftRelease>", "<2-LeftRelease>", "<3-LeftRelease>" } do
+  map("x", lhs, '"+ygv', { desc = "Copy mouse selection to clipboard" })
+end

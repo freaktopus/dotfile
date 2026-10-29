@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Alt+Shift+A: list every open window (all workspaces) in wofi and jump to the one picked.
+windows=$(swaymsg -t get_tree | jq -r '
+  recurse(.nodes[]?, .floating_nodes[]?)
+  | select(.type == "workspace") as $ws
+  | $ws | recurse(.nodes[]?, .floating_nodes[]?)
+  | select((.type == "con" or .type == "floating_con") and .pid != null)
+  | "\(.id)\t[\($ws.name)]  \(.app_id // .window_properties.class)  —  \(.name)"')
+[[ -z $windows ]] && exit 0
+pick=$(cut -f2 <<<"$windows" | wofi --dmenu --prompt "Windows" --columns 1 --lines 12 --width 700 --cache-file /dev/null) || exit 0
+id=$(awk -F'\t' -v p="$pick" '$2 == p {print $1; exit}' <<<"$windows")
+[[ -n $id ]] && swaymsg -q "[con_id=$id] focus"

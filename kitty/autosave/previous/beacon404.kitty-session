@@ -1,0 +1,29 @@
+
+new_tab Nvim
+layout splits
+enabled_layouts splits,stack
+set_layout_state {"pairs": {"one": 2}, "opts": {"split_axis": "horizontal", "equalize_on_window_close": "n", "proportional": "n"}, "class": "Splits", "all_windows": {"active_group_idx": 0, "active_group_history": [2], "window_groups": [{"id": 2, "window_ids": [2]}]}}
+cd /home/freaktopus/.cache/paru/clone/swayfx/src/build
+
+launch 'kitty-unserialize-data={"id": 2}' /usr/bin/zsh
+focus
+
+new_tab Terminal
+layout splits
+enabled_layouts splits,stack
+set_layout_state {"pairs": {"one": 3}, "opts": {"split_axis": "horizontal", "equalize_on_window_close": "n", "proportional": "n"}, "class": "Splits", "all_windows": {"active_group_idx": 0, "active_group_history": [3], "window_groups": [{"id": 3, "window_ids": [3]}]}}
+cd /home/freaktopus
+
+launch 'kitty-unserialize-data={"id": 3}' /usr/bin/zsh
+focus
+
+new_tab Terminal 2
+layout splits
+enabled_layouts splits,stack
+set_layout_state {"pairs": {"one": 4}, "opts": {"split_axis": "horizontal", "equalize_on_window_close": "n", "proportional": "n"}, "class": "Splits", "all_windows": {"active_group_idx": 0, "active_group_history": [4], "window_groups": [{"id": 4, "window_ids": [4]}]}}
+cd /home/freaktopus
+
+launch 'kitty-unserialize-data={"id": 4}' /usr/bin/zsh
+focus
+
+focus_tab 0

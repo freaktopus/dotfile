@@ -1,0 +1,135 @@
+#!/usr/bin/python3 -I
+"""Waybar notification ticker.
+
+Listens for desktop notifications on the session bus (the same calls swaync
+receives) and shows them in the bar for a few seconds: app icon, bold title,
+then the message. Text longer than the slot scrolls sideways like a ticker.
+Prints nothing visible when idle, so waybar hides the module.
+"""
+import html
+import json
+import queue
+import re
+import subprocess
+import sys
+import threading
+import time
+
+WIDTH = 38          # characters of message visible at once (monospace font -> fixed width)
+TITLE = 20          # longest title shown (cut with an ellipsis)
+TICK = 0.11         # seconds per scrolled character
+HOLD = 5.0          # seconds a short notification stays
+EDGE_PAUSE = 1.2    # pause before scrolling starts and after it ends
+
+ICONS = {           # app name (lowercase, substring) -> Nerd Font glyph
+    "firefox": "", "chrom": "", "discord": "", "telegram": "",
+    "spotify": "", "kitty": "", "terminal": "", "screenshot": "",
+    "wi-fi": "", "network": "", "bluetooth": "", "caffeine": "",
+    "osd": "", "volume": "", "battery": "", "code": "",
+    "slack": "", "mail": "", "thunderbird": "", "calendar": "",
+}
+DEFAULT_ICON = ""   # bell
+
+notes: "queue.Queue[tuple[str, str, str]]" = queue.Queue()
+
+
+def icon_for(app: str) -> str:
+    a = app.lower()
+    for key, glyph in ICONS.items():
+        if key in a:
+            return glyph
+    return DEFAULT_ICON
+
+
+def clean(text: str) -> str:
+    text = re.sub(r"<[^>]+>", "", text)          # notification bodies may carry markup
+    text = html.unescape(text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def listen() -> None:
+    """Parse Notify(app, replaces_id, icon, summary, body, ...) calls from dbus-monitor."""
+    proc = subprocess.Popen(
+        ["dbus-monitor", "--session",
+         "type='method_call',interface='org.freedesktop.Notifications',member='Notify'"],
+        stdout=subprocess.PIPE, text=True, errors="replace")
+    args, partial = None, None
+    for line in proc.stdout:
+        raw = line.rstrip("\n")
+        if "member=Notify" in raw:
+            args, partial = [], None
+            continue
+        if args is None:
+            continue
+        if partial is not None:                      # inside a multi-line string
+            if raw.endswith('"'):
+                args.append(partial + "\n" + raw[:-1]); partial = None
+            else:
+                partial += "\n" + raw
+            continue
+        s = raw.strip()
+        if s.startswith('string "'):
+            v = s[len('string "'):]
+            if v.endswith('"'):
+                args.append(v[:-1])
+            else:
+                partial = v
+        elif s.startswith("uint32 "):
+            args.append(s.split()[1])
+        if len(args) >= 5:                           # app, id, icon, summary, body
+            app, _, _, summary, body = args[:5]
+            notes.put((clean(app) or "notification", clean(summary), clean(body)))
+            args = None
+
+
+def emit(text: str = "", cls: str = "idle", tooltip: str = "") -> None:
+    sys.stdout.write(json.dumps({"text": text, "class": cls, "tooltip": tooltip}) + "\n")
+    sys.stdout.flush()
+
+
+def frame(glyph: str, title: str, window: str) -> str:
+    return (f"<span color='#fe8019'>{glyph}</span>  "
+            f"<b>{html.escape(title)}</b>  "
+            f"<span color='#e6e6e6'>{html.escape(window)}</span>")
+
+
+def show(app: str, summary: str, body: str) -> None:
+    """Display one notification; returns early if a newer one arrives."""
+    glyph = icon_for(app)
+    title = summary or app
+    if len(title) > TITLE:
+        title = title[:TITLE - 1] + "…"
+    msg = body if summary else ""
+    tip = f"{app}\n{summary}\n{body}".strip()
+    if len(msg) <= WIDTH:
+        emit(frame(glyph, title, msg.ljust(WIDTH)), "active", tip)
+        end = time.time() + HOLD
+        while time.time() < end:
+            if not notes.empty():
+                return
+            time.sleep(0.1)
+        return
+    # ticker: pause, scroll to the end, pause
+    steps = len(msg) - WIDTH
+    for i in range(steps + 1):
+        emit(frame(glyph, title, msg[i:i + WIDTH]), "active", tip)
+        wait = EDGE_PAUSE if i in (0, steps) else TICK
+        end = time.time() + wait
+        while time.time() < end:
+            if not notes.empty():
+                return
+            time.sleep(0.03)
+
+
+def main() -> None:
+    threading.Thread(target=listen, daemon=True).start()
+    emit()
+    while True:
+        item = notes.get()
+        show(*item)
+        if notes.empty():
+            emit()
+
+
+if __name__ == "__main__":
+    main()

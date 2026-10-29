@@ -1,22 +1,25 @@
+-- Paste screenshots from the clipboard into any file (markdown, html, latex, ...).
+-- <leader>ip or  :PasteImage   — works with Print (sway screenshot) on Wayland via wl-paste.
 return {
-	"dfendr/clipboard-image.nvim",
-	config = function()
-		require("clipboard-image").setup({
-			default = {
-				img_dir = "assets",
-				img_name = function()
-					return os.date("%Y-%m-%d-%H-%M-%S")
-				end, -- Example result: "2021-04-13-10-04-18"
-				affix = "<\n  %s\n>", -- Multi lines affix
-			},
-
+	"HakonHarnes/img-clip.nvim",
+	event = "VeryLazy",
+	opts = {
+		default = {
+			dir_path = "assets",
+			file_name = "%Y-%m-%d-%H-%M-%S",
+			use_absolute_path = false,
+			relative_to_current_file = true,
+			prompt_for_file_name = false,
+			drag_and_drop = { insert_mode = true },
+		},
+		filetypes = {
 			markdown = {
-				img_dir = { "static", "img" }, -- Use table for nested dir
-				img_dir_txt = "/img",
-				-- WARNING: removed unsafe os.execute handler that ran a shell script
-				-- from the current working directory. Do not execute arbitrary scripts
-				-- from project directories.
+				dir_path = "img",
+				template = "![$CURSOR]($FILE_PATH)",
 			},
-		})
-	end,
+		},
+	},
+	keys = {
+		{ "<leader>ip", "<cmd>PasteImage<cr>", desc = "Paste image from clipboard" },
+	},
 }
