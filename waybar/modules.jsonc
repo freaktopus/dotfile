@@ -160,8 +160,7 @@
         "format-linked": "󰤧",
         "format-disconnected": "󰤭",
         "format-disabled": "󰤮",
-        "on-click": "~/.local/bin/net-toggle wifi",
-        "on-click-right": "swaymsg -q '[app_id=nmtui] kill' 2>/dev/null || kitty -o startup_session=none -o confirm_os_window_close=0 -o tab_bar_style=hidden --class nmtui -e nmtui-connect"
+        "on-click": "swaymsg -q '[app_id=nmtui] kill' 2>/dev/null || kitty -o startup_session=none -o confirm_os_window_close=0 -o tab_bar_style=hidden --class nmtui -e nmtui-connect"
     },
     "network": {
         "interval": 5,
@@ -171,8 +170,7 @@
         "format-disabled": "off",
         "tooltip-format-wifi": "{essid}  {signalStrength}%\n{ipaddr}\n {bandwidthUpBytes}    {bandwidthDownBytes}",
         "tooltip-format-ethernet": "{ifname}  {ipaddr}\n {bandwidthUpBytes}    {bandwidthDownBytes}",
-        "on-click": "~/.local/bin/net-toggle wifi",
-        "on-click-right": "swaymsg -q '[app_id=nmtui] kill' 2>/dev/null || kitty -o startup_session=none -o confirm_os_window_close=0 -o tab_bar_style=hidden --class nmtui -e nmtui-connect"
+        "on-click": "swaymsg -q '[app_id=nmtui] kill' 2>/dev/null || kitty -o startup_session=none -o confirm_os_window_close=0 -o tab_bar_style=hidden --class nmtui -e nmtui-connect"
     },
     "custom/tailscale": {
         "exec": "~/.local/bin/tailscale-status",
