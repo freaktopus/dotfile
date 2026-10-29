@@ -2,7 +2,8 @@
 # mypod        connect the AirPods
 # mypod off    disconnect
 # (Only connects. Pair them once first: right-click the Bluetooth icon in waybar -> Blueman.)
-NAME="freakpod"                     # Bluetooth name of the AirPods
+MAC="20:15:82:CC:31:D2"             # the AirPods (their name is "Fᵣₑₐₖₚₒdₛ", in Unicode subscripts)
+NAME="AirPods"
 
 say() { echo "$1"; notify-send -a Bluetooth -t 2500 "AirPods" "${1#* }" 2>/dev/null || true; }
 
@@ -10,7 +11,7 @@ say() { echo "$1"; notify-send -a Bluetooth -t 2500 "AirPods" "${1#* }" 2>/dev/n
 rfkill unblock bluetooth 2>/dev/null
 bluetoothctl show | grep -q "Powered: yes" || { bluetoothctl power on >/dev/null; sleep 1; }
 
-mac=$(bluetoothctl devices Paired | grep -iF "$NAME" | awk '{print $2; exit}')
+mac=$(bluetoothctl devices Paired | awk -v m="$MAC" '$2 == m {print $2; exit}')
 [[ -z $mac ]] && { say "❌ $NAME is not paired with this laptop. Pair it once in Blueman."; exit 1; }
 
 if [[ ${1:-} == off ]]; then
@@ -22,6 +23,7 @@ if bluetoothctl info "$mac" | grep -q "Connected: yes"; then
   say "✅ $NAME already connected"; exit 0
 fi
 
+bluetoothctl trust "$mac" >/dev/null 2>&1        # lets them reconnect without prompts
 echo "🎧 Connecting to $NAME ($mac)..."
 for attempt in 1 2 3; do                  # AirPods sometimes refuse the first try
   if timeout 15 bluetoothctl connect "$mac" >/dev/null 2>&1; then
