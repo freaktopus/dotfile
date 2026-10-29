@@ -1,32 +1,21 @@
 #!/usr/bin/env bash
-# mypod        connect the AirPods (pairs them the first time)
+# mypod        connect the AirPods
 # mypod off    disconnect
+# (Only connects. Pair them once first: right-click the Bluetooth icon in waybar -> Blueman.)
 NAME="freakpod"                     # Bluetooth name of the AirPods
 
 say() { echo "$1"; notify-send -a Bluetooth -t 2500 "AirPods" "${1#* }" 2>/dev/null || true; }
-mac_of() { bluetoothctl devices "$@" | grep -iF "$NAME" | awk '{print $2; exit}'; }
 
 # Bluetooth on
 rfkill unblock bluetooth 2>/dev/null
 bluetoothctl show | grep -q "Powered: yes" || { bluetoothctl power on >/dev/null; sleep 1; }
 
-mac=$(mac_of Paired)
+mac=$(bluetoothctl devices Paired | grep -iF "$NAME" | awk '{print $2; exit}')
+[[ -z $mac ]] && { say "❌ $NAME is not paired with this laptop. Pair it once in Blueman."; exit 1; }
 
 if [[ ${1:-} == off ]]; then
-  [[ -z $mac ]] && { echo "$NAME is not paired."; exit 1; }
   bluetoothctl disconnect "$mac" >/dev/null && say "🔌 Disconnected $NAME"
   exit
-fi
-
-if [[ -z $mac ]]; then
-  echo "🔍 $NAME is not paired yet. Open the AirPods case and hold its button until the light flashes white..."
-  bluetoothctl --timeout 15 scan on >/dev/null 2>&1 &
-  for _ in $(seq 15); do sleep 1; mac=$(mac_of) && [[ -n $mac ]] && break; done
-  [[ -z $mac ]] && { say "❌ $NAME not found. Is the case open and flashing white?"; exit 1; }
-  echo "📎 Pairing with $NAME ($mac)..."
-  timeout 25 bluetoothctl pair "$mac" >/dev/null 2>&1 || bluetoothctl info "$mac" | grep -q "Paired: yes" \
-    || { say "❌ Pairing with $NAME failed. Try again with the case open."; exit 1; }
-  bluetoothctl trust "$mac" >/dev/null
 fi
 
 if bluetoothctl info "$mac" | grep -q "Connected: yes"; then
@@ -40,5 +29,5 @@ for attempt in 1 2 3; do                  # AirPods sometimes refuse the first t
   fi
   sleep 2
 done
-say "❌ Couldn't connect to $NAME. Put them in your ears or open the case, then run mypod again."
+say "❌ Couldn't connect to $NAME. Open the case or put them in your ears, then run mypod again."
 exit 1
