@@ -15,10 +15,10 @@ def rgb(hex_color: str) -> int:
 
 
 FG = rgb('#ebdbb2')
-MUTED = rgb('#a89984')
-DIM = rgb('#7c6f64')
+MUTED = rgb('#c2b59b')
+DIM = rgb('#a0907e')
 SURFACE = rgb('#3c3836')
-ORANGE = rgb('#fe8019')
+ORANGE = rgb('#d9874e')  # faded orange
 YELLOW = rgb('#fabd2f')
 GOLD = rgb('#d79921')
 BG0 = rgb('#1d2021')

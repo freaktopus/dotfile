@@ -4,12 +4,12 @@
 @define-color glass      rgba(0, 0, 0, 0.94);
 @define-color edge       #232323;
 @define-color fg         #e6e6e6;   /* clean white text */
-@define-color dim        #7a7f8c;
+@define-color dim        #9a9fab;
 @define-color sep        #3a3a3a;
 @define-color blue       #7aa2f7;
 @define-color cyan       #7dcfff;
 @define-color purple     #bb9af7;
-@define-color kitty      #fe8019;   /* kitty's accent orange */
+@define-color kitty      #f5a66b;   /* soft light orange (current workspace) */
 @define-color magenta    #ff79c6;
 @define-color amber      #e0af68;
 @define-color ok         #9ece6a;   /* status: connected */

@@ -107,7 +107,8 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vi='nvim'
-alias red="redshift -P -O 3500"
+alias red="~/.local/bin/nightlight on"     # warm/red screen now (was redshift -P -O 3500 on X11)
+alias nored="~/.local/bin/nightlight auto"  # back to automatic (warm only after sunset)
 
 # For SDDM
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
