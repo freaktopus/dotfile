@@ -1,0 +1,9 @@
+[Unit]
+Description=Run battery care every 10 minutes (and at boot)
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=10min
+
+[Install]
+WantedBy=timers.target

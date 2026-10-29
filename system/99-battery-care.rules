@@ -1,0 +1,5 @@
+# Let group wheel set the battery charge limits, so ~/.local/bin/battery-care works without sudo.
+# Install:
+#   sudo cp ~/dotfile/system/99-battery-care.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload && sudo udevadm trigger -s power_supply
+SUBSYSTEM=="power_supply", KERNEL=="BAT0", RUN+="/bin/sh -c 'cd /sys%p && chgrp wheel charge_control_start_threshold charge_control_end_threshold charge_types && chmod g+w charge_control_start_threshold charge_control_end_threshold charge_types'"

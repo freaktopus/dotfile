@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# Battery care for the Dell (BAT0, kernel charge-control thresholds).
+#
+#   battery-care            show status
+#   battery-care care       normal mode: hardware keeps the battery between 75 and 80 %
+#   battery-care full       allow ONE charge to 100 % (before a trip); returns to care after
+#   battery-care tick       run by the systemd timer every 10 min
+#
+# Facts behind it (lithium cells):
+#   - wear comes from time spent at high charge, heat, and deep discharges,
+#     not from how often you plug in. So: cap the charge, never drain on purpose.
+#   - no "memory effect": full cycles are not needed for the cells. One full charge a
+#     month only helps the battery gauge keep its % reading accurate.
+# So the tick does: keep 75-80 %; once every 30 days, while on AC, allow one charge to
+# 100 %; when that is reached and the charger is unplugged (or after 24 h), back to 75-80 %.
+set -euo pipefail
+
+BAT=/sys/class/power_supply/BAT0
+AC=/sys/class/power_supply/AC/online
+START=75 END=80                     # care window
+FULL_EVERY_DAYS=30                  # gauge-calibration full charge
+FULL_MAX_HOURS=24                   # give up on a pending full charge after this
+STATE_DIR=${XDG_STATE_HOME:-$HOME/.local/state}/battery-care
+mkdir -p "$STATE_DIR"
+MODE_F=$STATE_DIR/mode LAST_FULL_F=$STATE_DIR/last_full SINCE_F=$STATE_DIR/full_since REACHED_F=$STATE_DIR/full_reached
+
+now=$(date +%s)
+mode=$(cat "$MODE_F" 2>/dev/null || echo care)
+[[ -f $LAST_FULL_F ]] || echo "$now" >"$LAST_FULL_F"   # first run starts the 30-day clock
+last_full=$(cat "$LAST_FULL_F")
+cap=$(cat $BAT/capacity) status=$(cat $BAT/status) on_ac=$(cat $AC 2>/dev/null || echo 0)
+
+note() { notify-send -a Battery -t 4000 "Battery care" "$1" 2>/dev/null || true; }
+
+write() {   # write <file> <value>; needs the udev rule from ~/dotfile/system (group wheel can write)
+  local f=$BAT/$1
+  [[ $(cat "$f") == *"[$2]"* || $(cat "$f") == "$2" ]] && return 0
+  if ! printf '%s' "$2" >"$f" 2>/dev/null; then
+    echo "battery-care: cannot write $f (install ~/dotfile/system/99-battery-care.rules, see README)" >&2
+    return 1
+  fi
+}
+
+apply() {   # apply <start> <end>; order matters: start must stay below end
+  write charge_types Custom
+  if (( $1 >= $(cat $BAT/charge_control_end_threshold) )); then
+    write charge_control_end_threshold "$2"; write charge_control_start_threshold "$1"
+  else
+    write charge_control_start_threshold "$1"; write charge_control_end_threshold "$2"
+  fi
+}
+
+set_mode() { echo "$1" >"$MODE_F"; mode=$1; }
+
+to_care() { apply $START $END; set_mode care; rm -f "$SINCE_F" "$REACHED_F"; }
+to_full() { apply 95 100; set_mode full; echo "$now" >"$SINCE_F"; rm -f "$REACHED_F"; }
+
+status_out() {
+  local days="never"
+  (( last_full > 0 )) && days="$(( (now - last_full) / 86400 )) days ago"
+  local health=$(( $(cat $BAT/charge_full) * 100 / $(cat $BAT/charge_full_design) ))
+  echo "mode:         $mode ($( [[ $mode == care ]] && echo "keeps $START-$END %" || echo "one charge to 100 %"))"
+  echo "battery:      $cap % ($status), charger $( ((on_ac)) && echo plugged || echo unplugged )"
+  echo "thresholds:   start $(cat $BAT/charge_control_start_threshold) %, stop $(cat $BAT/charge_control_end_threshold) % [$(cat $BAT/charge_types)]"
+  echo "last 100 %:   $days (next automatic one after $FULL_EVERY_DAYS days, on AC)"
+  echo "health:       $health % of design capacity"
+}
+
+case "${1:-status}" in
+  status) status_out ;;
+  care)   to_care; note "Back to normal: battery kept between $START and $END %"; status_out ;;
+  full)   to_full; note "Charging to 100 % once; returns to $START-$END % after you unplug"; status_out ;;
+  tick)
+    if [[ $mode == full ]]; then
+      since=$(cat "$SINCE_F" 2>/dev/null || echo "$now")
+      if (( cap >= 99 )) || [[ $status == Full ]]; then
+        echo "$now" >"$LAST_FULL_F"; touch "$REACHED_F"
+      fi
+      if [[ -e $REACHED_F ]] && (( ! on_ac )); then
+        to_care; note "Full charge done; back to $START-$END % limit"
+      elif (( now - since > FULL_MAX_HOURS * 3600 )); then
+        to_care
+      else
+        apply 95 100                       # firmware can reset thresholds; re-apply
+      fi
+    else
+      if (( on_ac )) && (( now - last_full > FULL_EVERY_DAYS * 86400 )); then
+        to_full; note "Monthly full charge to keep the battery % accurate"
+      else
+        apply $START $END
+      fi
+    fi ;;
+  *) echo "usage: battery-care [status|care|full|tick]" >&2; exit 2 ;;
+esac

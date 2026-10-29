@@ -1,0 +1,6 @@
+[Unit]
+Description=Battery care: keep charge between 75 and 80 %, monthly full charge
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/battery-care tick
