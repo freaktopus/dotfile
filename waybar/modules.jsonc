@@ -136,14 +136,26 @@
         "format-disabled": "󰂲",
         "format-no-controller": "",
         "format-connected": "󰂱",
-        "format-connected-battery": "󰂱 {device_battery_percentage}%",
+        "format-connected-battery": "{icon} <span size='9pt'>{device_battery_percentage}%</span>",
         "tooltip-format": "Bluetooth on — {num_connections} connected",
         "tooltip-format-off": "Bluetooth off",
         "tooltip-format-connected": "{device_enumerate}",
-        "tooltip-format-enumerate-connected": "{device_alias}",
-        "tooltip-format-enumerate-connected-battery": "{device_alias}  {device_battery_percentage}%",
+        "tooltip-format-enumerate-connected": "󰂱  {device_alias}",
+        "tooltip-format-enumerate-connected-battery": "󰋋  {device_alias}   {device_battery_percentage}%",
         "on-click": "~/.local/bin/net-toggle bluetooth",
-        "on-click-right": "swaymsg -q '[app_id=blueman-manager] kill' 2>/dev/null || GTK_THEME=Adwaita:dark blueman-manager"
+        "on-click-right": "swaymsg -q '[app_id=blueman-manager] kill' 2>/dev/null || GTK_THEME=Adwaita:dark blueman-manager",
+        "format-icons": [
+            "<span color='#f7768e'>󰋋</span>",
+            "<span color='#f7768e'>󰋋</span>",
+            "<span color='#ff9e64'>󰋋</span>",
+            "<span color='#e0af68'>󰋋</span>",
+            "<span color='#e0af68'>󰋋</span>",
+            "<span color='#c3c96b'>󰋋</span>",
+            "<span color='#9ece6a'>󰋋</span>",
+            "<span color='#9ece6a'>󰋋</span>",
+            "<span color='#9ece6a'>󰋋</span>",
+            "<span color='#9ece6a'>󰋋</span>"
+        ]
     },
     "network#icon": {
         "interval": 5,
