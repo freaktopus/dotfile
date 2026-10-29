@@ -93,14 +93,14 @@ def _session_chips(active: str, default_bg: int) -> list:
         c = counts.get(n, 0)
         if n == active:
             # the session you are in now: solid orange block with a filled dot
-            parts = [(f' ● {n} {c} ', BG0, ORANGE, True)]
+            parts = [(f' ● {n} {c} ', BG0, ORANGE, False)]
         elif c:
             # loaded, has tabs, but not the one on screen
             parts = [(f' ○ {n} {c} ', MUTED, SURFACE, False)]
         else:
             parts = [(f'  {n}  ', DIM, PILL, False)]
         chips.append((n, parts + [('  ', FG, default_bg, False)]))  # two blank cells between devices
-    chips.append(('+', [(' + ', ORANGE, SURFACE, True), (' ', FG, default_bg, False)]))
+    chips.append(('+', [(' + ', ORANGE, SURFACE, False), (' ', FG, default_bg, False)]))
     return chips
 
 
@@ -126,7 +126,7 @@ def _draw_right(screen: Screen, tab: TabBarData, default_bg: int) -> None:
     chips = _session_chips(active, default_bg)
     chip_parts = [p for _, parts in chips for p in parts]
     sep = [('│', DIM, default_bg, False)]
-    clock = [(now.strftime(' %H:%M '), BG0, GOLD, True)]
+    clock = [(now.strftime(' %H:%M '), BG0, GOLD, False)]
     date = [(now.strftime(' %a %d %b '), MUTED, SURFACE, False)]
     room = screen.columns - screen.cursor.x - 2
     # drop the least important things first when the window is narrow
@@ -216,7 +216,7 @@ def draw_tab(
         screen.cursor.fg = ORANGE
         screen.draw('▎')
         screen.cursor.fg = FG
-        screen.cursor.bold = True
+        screen.cursor.bold = False
         screen.draw(f'{index} {title}{zoom} ')
         screen.cursor.bold = False
     else:
