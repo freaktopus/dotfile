@@ -1,0 +1,4 @@
+# PIN + Enter unlocks instantly; empty Enter falls through to the fingerprint; password is the last resort
+auth       sufficient   pam_exec.so quiet expose_authtok /usr/local/bin/swaylock-pin-check
+auth       sufficient   pam_fprintd.so
+auth include login

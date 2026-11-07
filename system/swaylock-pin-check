@@ -1,0 +1,8 @@
+#!/bin/sh
+# pam_exec expose_authtok hook for swaylock: succeed if the typed secret matches /etc/swaylock-pin
+# (sha512-crypt). Runs as the locking user, so the file is root:<user> 0640.
+hash=$(cat /etc/swaylock-pin 2>/dev/null) || exit 1
+pin=$(tr -d '\0')
+[ -n "$pin" ] && [ -n "$hash" ] || exit 1
+salt=$(printf %s "$hash" | cut -d'$' -f3)
+[ "$(printf %s "$pin" | openssl passwd -6 -salt "$salt" -stdin)" = "$hash" ]
