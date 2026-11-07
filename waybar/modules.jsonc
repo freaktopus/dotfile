@@ -38,7 +38,11 @@
         "spacing": 8
     },
     "custom/i-clock": {
-        "format": "",
+        "format": "󰥔",
+        "tooltip": false
+    },
+    "custom/i-cal": {
+        "format": "󰃭",
         "tooltip": false
     },
     "clock": {
@@ -332,8 +336,7 @@
         "modules": [
             "bluetooth",
             "custom/tailscale",
-            "custom/caffeine",
-            "tray"
+            "custom/caffeine"
         ]
     },
     "group/island": {
@@ -342,6 +345,7 @@
             "custom/i-clock",
             "clock",
             "custom/sep2",
+            "custom/i-cal",
             "clock#date"
         ]
     },

@@ -1,5 +1,5 @@
 # ~/.config/sway/config  —  Gruvbox Dark, Alt as mod, vim keys
-# Reload: Alt+Shift+c      Docs: man 5 sway
+# Reload: Alt+Shift+r      Docs: man 5 sway
 
 ### ── Variables ────────────────────────────────────────────────
 set $mod Mod1
@@ -24,7 +24,7 @@ set $aqua     #689d6a
 set $unfocus  #737373
 
 ### ── Look & feel ──────────────────────────────────────────────
-font pango:Monaspace Neon, Symbols Nerd Font 10
+font pango:JetBrainsMono Nerd Font, Symbols Nerd Font 10
 
 default_border pixel 2
 default_floating_border pixel 2
@@ -52,12 +52,14 @@ exec_always {
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
     gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
     gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-    gsettings set org.gnome.desktop.interface font-name 'Monaspace Neon 9'
-    gsettings set org.gnome.desktop.interface monospace-font-name 'Monaspace Neon 9'
+    gsettings set org.gnome.desktop.interface font-name 'JetBrainsMono Nerd Font 9'
+    gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 9'
 }
 
 ### ── Outputs ──────────────────────────────────────────────────
 # swaymsg -t get_outputs   to list names
+output eDP-1 pos 0 0
+output HDMI-A-1 pos 1920 0
 workspace 1 output eDP-1
 workspace 2 output eDP-1
 workspace 3 output HDMI-A-1 eDP-1
@@ -141,8 +143,8 @@ bindsym $mod+Return       exec $term
 bindsym $mod+d            exec $menu
 bindsym $mod+Shift+q      kill
 bindsym $mod+Shift+b      exec thunar
-bindsym $mod+Shift+f      exec firefox-developer-edition
-bindsym $mod+Shift+c      reload
+bindsym $mod+Shift+f      exec google-chrome-stable
+bindsym $mod+Shift+r      reload
 bindsym $mod+Shift+e      exec $scripts/powermenu
 bindsym $mod+Shift+i      exec $scripts/lock
 bindsym $mod+n            exec swaync-client -t -sw
@@ -229,8 +231,9 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Screenshots → ~/Pictures/Screenshots + clipboard (image for browser/nvim, path for terminal)
-bindsym Print            exec $scripts/screenshot region
-bindsym Shift+Print      exec $scripts/screenshot edit
+# Print = flameshot-style editor (Enter or the copy button saves to file and clipboard)
+bindsym Print            exec $scripts/screenshot edit    # select area, annotate, Enter = save + copy
+bindsym Shift+Print      exec $scripts/screenshot region  # quick: no editor
 bindsym Ctrl+Print       exec $scripts/screenshot full
 bindsym $mod+Print       exec $scripts/screenshot window
 bindsym $mod+Shift+p     exec $scripts/screenshot region
@@ -246,6 +249,9 @@ bindsym --locked XF86AudioPlay  exec playerctl play-pause
 bindsym --locked XF86AudioPause exec playerctl play-pause
 bindsym --locked XF86AudioNext  exec playerctl next
 bindsym --locked XF86AudioPrev  exec playerctl previous
+
+# Ctrl+Alt+Backspace: quit sway (back to the login screen); asks first so a slip doesn't kill your apps
+bindsym Ctrl+Mod1+BackSpace exec swaynag -t warning -m 'Quit sway? All open apps will close.' -B 'Yes, quit' 'swaymsg exit'
 
 include /etc/sway/config.d/*
 

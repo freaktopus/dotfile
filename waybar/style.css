@@ -17,8 +17,8 @@
 @define-color white      #ffffff;
 
 * {
-    font-family: 'Monaspace Neon', 'Symbols Nerd Font', monospace;
-    font-size: 12px;
+    font-family: 'JetBrainsMono Nerd Font', 'Symbols Nerd Font', monospace;
+    font-size: 13px;
     font-weight: 600;
     border: none;
     border-radius: 0;
@@ -35,25 +35,27 @@ window#waybar { background: transparent; color: @fg; }
     background: @glass;
     border: 1px solid @edge;
     border-radius: 0;
-    padding: 0 12px;
+    padding: 0 13px;
 }
-#pill-status { margin-left: 8px; padding: 0 6px; }
-#island { padding: 0 10px; border-color: #2c2c2c; }
+#pill-status { margin-left: 8px; padding: 0 7px; }
+#island { padding: 0 11px; border-color: #2c2c2c; }
 
 /* separators */
 #custom-sep1, #custom-sep2, #custom-sep3, #custom-sep4 {
     color: @sep;
-    font-size: 13px;
-    padding: 0 9px;
+    font-size: 14px;
+    padding: 0 10px;
 }
 
 /* icons: clear gap from the previous module, close to their own text */
 #custom-i-window, #custom-i-cpu, #temperature.icon, #custom-i-mem, #backlight.icon,
 #pulseaudio.icon, #network.icon, #battery.icon {
-    font-size: 14px;
-    padding: 0 5px 0 12px;
+    font-size: 15px;
+    padding: 0 6px 0 13px;
 }
 #custom-i-cpu, #custom-i-window, #backlight.icon, #network.icon { padding-left: 0; }
+/* JetBrainsMono NF draws these glyphs wider than their advance, eating the gap */
+#custom-i-window, #custom-i-cpu, #custom-i-mem, #network.icon { font-family: 'Symbols Nerd Font'; }
 /* text next to an icon */
 #window, #cpu, #temperature, #custom-memory, #backlight, #pulseaudio, #network, #battery {
     color: @fg;
@@ -64,22 +66,22 @@ window#waybar { background: transparent; color: @fg; }
 #workspaces button {
     color: @dim;
     background: transparent;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
-    padding: 0 5px;
+    padding: 0 6px;
     min-width: 0;
 }
 #workspaces button.focused { color: @kitty; }
 #workspaces button.urgent  { color: @bad; }
 #workspaces button:hover   { color: @kitty; background: transparent; box-shadow: none; }
-#mode { color: #0a0a0f; background: @amber; border-radius: 0; padding: 0 6px; margin: 3px 3px; }
+#mode { color: #0a0a0f; background: @amber; border-radius: 0; padding: 0 7px; margin: 3px 3px; }
 
 #custom-i-window { color: @ok; }       /* the prompt */
 #window          { color: @fg; }
 
 /* ── Status pill: Bluetooth · Tailscale · caffeine ───── */
-#bluetooth, #custom-tailscale, #custom-caffeine { font-size: 14px; padding: 0 7px; }
-#custom-tailscale { font-size: 15px; }
+#bluetooth, #custom-tailscale, #custom-caffeine { font-size: 15px; padding: 0 8px; }
+#custom-tailscale { font-size: 16px; }
 #bluetooth                           { color: @blue; }   /* on, nothing connected */
 #bluetooth.connected                 { color: @ok; }
 #bluetooth.off, #bluetooth.disabled  { color: @bad; }
@@ -88,13 +90,14 @@ window#waybar { background: transparent; color: @fg; }
 #custom-tailscale.off                { color: @bad; }
 #custom-caffeine.on                  { color: @amber; }  /* staying awake */
 #custom-caffeine.off                 { color: @dim; }
-#tray { padding: 0 4px; }
+#tray { padding: 0 5px; }
 #tray > .needs-attention { -gtk-icon-effect: highlight; }
 
 /* ── Island: time │ date ─────────────────────────────── */
-#custom-i-clock { color: @cyan; font-size: 13px; padding-right: 5px; }
-#clock          { color: @white; font-size: 11px; font-weight: 700; }
-#clock.date     { color: @dim; font-size: 11px; font-weight: 500; }
+#custom-i-cal   { color: @amber; font-size: 14px; padding-right: 9px; }
+#custom-i-clock { color: @cyan; font-size: 14px; padding-right: 9px; }
+#clock          { color: @white; font-size: 12px; font-weight: 700; }
+#clock.date     { color: @dim; font-size: 12px; font-weight: 500; }
 
 /* ── Right pill icon colors ──────────────────────────── */
 #custom-i-cpu    { color: @blue; }
@@ -117,7 +120,7 @@ window#waybar { background: transparent; color: @fg; }
 
 /* ── Tooltips / menus ────────────────────────────────── */
 tooltip { background: @glass; border: 1px solid @edge; border-radius: 0; }
-tooltip label { color: @fg; padding: 4px 10px; font-weight: 500; }
+tooltip label { color: @fg; padding: 5px 11px; font-weight: 500; }
 menu { background: @glass; color: @fg; border: 1px solid @edge; border-radius: 0; }
 menu > *:hover { background: #1a1a1a; }
 
@@ -127,8 +130,8 @@ menu > *:hover { background: #1a1a1a; }
     border: 1px solid @edge;
     border-left: 2px solid #fe8019;
     margin-left: 18px;
-    padding: 0 12px;
-    font-size: 11px;
+    padding: 0 13px;
+    font-size: 12px;
     font-weight: 500;
     color: @fg;
 }
