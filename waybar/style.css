@@ -56,6 +56,10 @@ window#waybar { background: transparent; color: @fg; }
 #custom-i-cpu, #custom-i-window, #backlight.icon, #network.icon { padding-left: 0; }
 /* icons from the symbols font: text fonts with Nerd glyphs mis-measure them and eat the gap */
 #custom-i-window, #custom-i-cpu, #custom-i-mem, #network.icon { font-family: 'Symbols Nerd Font'; }
+/* right pill: smaller, icons one step above the text so they sit level with it */
+#cpu, #temperature, #custom-memory, #backlight, #pulseaudio, #network, #battery { font-size: 12px; }
+#custom-i-cpu, #temperature.icon, #custom-i-mem, #backlight.icon, #pulseaudio.icon,
+#network.icon, #battery.icon { font-size: 13px; }
 /* text next to an icon */
 #window, #cpu, #temperature, #custom-memory, #backlight, #pulseaudio, #network, #battery {
     color: @fg;
