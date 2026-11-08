@@ -17,7 +17,7 @@
 @define-color white      #ffffff;
 
 * {
-    font-family: 'Helvetica', 'Symbols Nerd Font', sans-serif;
+    font-family: 'JetBrainsMono Nerd Font', 'Symbols Nerd Font', monospace;
     font-size: 13px;
     font-weight: 600;
     border: none;
@@ -54,7 +54,7 @@ window#waybar { background: transparent; color: @fg; }
     padding: 0 6px 0 13px;
 }
 #custom-i-cpu, #custom-i-window, #backlight.icon, #network.icon { padding-left: 0; }
-/* icons from the symbols font: text fonts with Nerd glyphs mis-measure them and eat the gap */
+/* JetBrainsMono NF draws these glyphs wider than their advance, eating the gap */
 #custom-i-window, #custom-i-cpu, #custom-i-mem, #network.icon { font-family: 'Symbols Nerd Font'; }
 /* text next to an icon */
 #window, #cpu, #temperature, #custom-memory, #backlight, #pulseaudio, #network, #battery {
