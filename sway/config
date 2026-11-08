@@ -24,7 +24,7 @@ set $aqua     #689d6a
 set $unfocus  #737373
 
 ### ── Look & feel ──────────────────────────────────────────────
-font pango:JetBrainsMono Nerd Font, Symbols Nerd Font 10
+font pango:SF Pro Text, Symbols Nerd Font 10
 
 default_border pixel 2
 default_floating_border pixel 2
@@ -52,7 +52,7 @@ exec_always {
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
     gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
     gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-    gsettings set org.gnome.desktop.interface font-name 'JetBrainsMono Nerd Font 9'
+    gsettings set org.gnome.desktop.interface font-name 'SF Pro Text 10'
     gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 9'
 }
 
